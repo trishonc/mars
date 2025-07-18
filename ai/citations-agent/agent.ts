@@ -33,6 +33,8 @@ ${researchState.sources.map((source, index) =>
     },
     toolChoice: 'required',
     abortSignal,
+    temperature: MODEL_CONFIG.TEMPERATURE,
+    maxOutputTokens: MODEL_CONFIG.MAX_OUTPUT_TOKENS,
     experimental_transform: smoothStream({ chunking: /.{1}/g }),
     stopWhen: [hasToolCall('complete_report')],
   });

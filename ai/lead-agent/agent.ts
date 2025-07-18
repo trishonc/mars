@@ -21,6 +21,8 @@ export async function runResearchAgent(messages: UIMessage[], writer: UIMessageS
     messages: convertToModelMessages(messages),
     tools,
     abortSignal,
+    temperature: MODEL_CONFIG.TEMPERATURE,
+    maxOutputTokens: MODEL_CONFIG.MAX_OUTPUT_TOKENS,
     providerOptions: {
       google: {
         thinkingConfig: {

@@ -17,7 +17,7 @@ export let researchState: ResearchState = {
   report: null,
 };
 
-export const initializeResearchState = (): void => {
+export const initResearchState = (): void => {
   researchState = {
     sources: [],
     plan: null,

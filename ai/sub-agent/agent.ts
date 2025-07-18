@@ -42,6 +42,8 @@ Follow these instructions carefully while applying your research methodology. Us
           complete_task: completeTaskTool,
         },
         abortSignal,
+        temperature: MODEL_CONFIG.TEMPERATURE,
+        maxOutputTokens: MODEL_CONFIG.MAX_OUTPUT_TOKENS,
         providerOptions: {
           google: {
             thinkingConfig: {
