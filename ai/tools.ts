@@ -43,6 +43,13 @@ export const webFetchTool = tool({
   }),
   execute: async ({ url }) => {
     try {
+      // Check if this URL already exists in sources
+      const existingSource = researchState.sources.find(source => source.url === url);
+      if (existingSource) {
+        console.log(`Source already exists in research state: ${url}`);
+        return { results: existingSource.content, title: existingSource.title || null };
+      }
+
       const response: SearchResponse<{ text: true }> = await exa.getContents([url], { text: true });
       
       let content: string | null = null;

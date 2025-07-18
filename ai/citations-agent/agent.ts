@@ -13,10 +13,6 @@ export async function runCitationsAgent(writer: UIMessageStreamWriter, abortSign
     return;
   }
 
-  const uniqueSources = researchState.sources.filter((source, index, self) => 
-    index === self.findIndex(s => s.url === source.url)
-  );
-
   const citationResult = await streamText({
     model: google(MODEL_CONFIG.CITATIONS_MODEL),
     system: CITATIONS_AGENT_PROMPT,
@@ -27,7 +23,7 @@ ${researchState.report}
 </synthesized_text>
 
 <sources>
-${uniqueSources.map((source, index) => 
+${researchState.sources.map((source, index) => 
   `[${index + 1}] ${source.title ? source.title + ' - ' : ''}${source.url}\n${source.content}`
 ).join('\n\n---\n\n')}
 </sources>
