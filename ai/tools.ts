@@ -89,7 +89,7 @@ export const completeReportTool = tool({
 export const savePlanTool = tool({
   description: 'Save the current research plan to memory for later retrieval.',
   inputSchema: z.object({
-    plan: z.string().describe('The research plan to save, including strategy, subagent tasks, and expected outcomes.'),
+    plan: z.string().describe('The research plan to save written in markdown format, including strategy, subagent tasks, and expected outcomes.'),
   }),
   execute: async ({ plan }) => {
     researchState.plan = plan;
