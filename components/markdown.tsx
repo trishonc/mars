@@ -65,42 +65,42 @@ const NonMemoizedMarkdown = ({ children }: { children: string }) => {
     },
     h1: ({ node, children, ...props }: any) => {
       return (
-        <h1 className="text-3xl font-semibold mt-6 mb-2" {...props}>
+        <h1 className="text-3xl font-semibold mt-3 mb-2" {...props}>
           {children}
         </h1>
       );
     },
     h2: ({ node, children, ...props }: any) => {
       return (
-        <h2 className="text-2xl font-semibold mt-6 mb-2" {...props}>
+        <h2 className="text-2xl font-semibold mt-3 mb-2" {...props}>
           {children}
         </h2>
       );
     },
     h3: ({ node, children, ...props }: any) => {
       return (
-        <h3 className="text-xl font-semibold mt-6 mb-2" {...props}>
+        <h3 className="text-xl font-semibold mt-3 mb-2" {...props}>
           {children}
         </h3>
       );
     },
     h4: ({ node, children, ...props }: any) => {
       return (
-        <h4 className="text-lg font-semibold mt-6 mb-2" {...props}>
+        <h4 className="text-lg font-semibold mt-3 mb-2" {...props}>
           {children}
         </h4>
       );
     },
     h5: ({ node, children, ...props }: any) => {
       return (
-        <h5 className="text-base font-semibold mt-6 mb-2" {...props}>
+        <h5 className="text-base font-semibold mt-3 mb-2" {...props}>
           {children}
         </h5>
       );
     },
     h6: ({ node, children, ...props }: any) => {
       return (
-        <h6 className="text-sm font-semibold mt-6 mb-2" {...props}>
+        <h6 className="text-sm font-semibold mt-3 mb-2" {...props}>
           {children}
         </h6>
       );
