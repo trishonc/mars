@@ -2,6 +2,7 @@
 
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import { Loader2, Check } from 'lucide-react';
 import React from 'react';
 import { WebSearch } from './web-search';
 import { WebFetch } from './web-fetch';
@@ -65,6 +66,13 @@ export function SubAgent({ id, title, toolCalls, state }: SubAgentProps) {
         <AccordionItem value={id} className="border-none">
           <AccordionTrigger className="hover:no-underline px-4 py-3">
             <div className="flex items-center gap-3 w-full min-w-0">
+              <div className="flex-shrink-0">
+                {state === 'streaming' ? (
+                  <Loader2 className="size-4 text-primary animate-spin" />
+                ) : (
+                  <Check className="size-4 text-muted-foreground" />
+                )}
+              </div>
               <div className="flex-1 text-left min-w-0">
                 <span className="text-base font-semibold break-word">{title}</span>
               </div>
