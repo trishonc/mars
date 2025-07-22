@@ -14,7 +14,6 @@ interface ReasoningProps {
 export function Reasoning({ text, state }: ReasoningProps) {
   const startTimeRef = useRef<number | null>(null);
   const [duration, setDuration] = React.useState<number | null>(null);
-
   // Track when thinking starts
   useEffect(() => {
     if (state === 'streaming' && startTimeRef.current === null) {

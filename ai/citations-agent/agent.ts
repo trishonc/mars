@@ -1,7 +1,6 @@
-import { streamText, UIMessageStreamWriter, hasToolCall, smoothStream } from 'ai';
+import { generateText, UIMessageStreamWriter } from 'ai';
 import { google } from '@ai-sdk/google';
 import { researchState } from '../research-state';
-import { completeReportTool } from '../tools';
 import { CITATIONS_AGENT_PROMPT } from './prompt';
 import { MODEL_CONFIG } from '../config';
 
@@ -13,35 +12,49 @@ export async function runCitationsAgent(writer: UIMessageStreamWriter, abortSign
     return;
   }
 
-  const citationResult = await streamText({
-    model: google(MODEL_CONFIG.CITATIONS_MODEL),
+  // Adding citations phase
+  writer.write({
+    type: 'data-report',
+    data: {
+      phase: 'citations',
+      report: '',
+      sources: [],
+    },
+    id: 'data-report',
+  });
+
+  console.log('Adding citations...');
+
+  // Generate complete report with citations
+  const citationsResult = await generateText({
+    model: MODEL_CONFIG.CITATIONS_MODEL,
     system: CITATIONS_AGENT_PROMPT,
     prompt: `Here is the synthesized text and sources collected during research:
 
-<synthesized_text>
-${researchState.report}
-</synthesized_text>
+    <synthesized_text>
+    ${researchState.report}
+    </synthesized_text>
 
-<sources>
-${researchState.sources.map((source, index) => 
-  `[${index + 1}] ${source.title ? source.title + ' - ' : ''}${source.url}\n${source.content}`
-).join('\n\n---\n\n')}
-</sources>
-`,
-    tools: {
-      complete_report: completeReportTool,
-    },
-    toolChoice: 'required',
+    <sources>
+    ${researchState.sources.map((source, index) => 
+      `[${index + 1}] ${source.title ? source.title + ' - ' : ''}${source.url}\n${source.content}`
+    ).join('\n\n---\n\n')}
+    </sources>
+    `,
     abortSignal,
     temperature: MODEL_CONFIG.TEMPERATURE,
     maxOutputTokens: MODEL_CONFIG.MAX_OUTPUT_TOKENS,
-    experimental_transform: smoothStream({ chunking: /.{1}/g }),
-    stopWhen: [hasToolCall('complete_report')],
+    providerOptions: MODEL_CONFIG.PROVIDER_OPTIONS,
   });
-  
-  writer.merge(citationResult.toUIMessageStream({
-    sendReasoning: true,
-    sendStart: false,
-    sendFinish: false,
-  }));
+
+  // Final report complete
+  writer.write({
+    type: 'data-report',
+    data: {
+      phase: 'finished',
+      report: citationsResult.text,
+      sources: researchState.sources.map(({ url, title }) => ({ url, title })),
+    },
+    id: 'data-report',
+  });
 } 

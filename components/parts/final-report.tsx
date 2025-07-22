@@ -1,35 +1,36 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Markdown } from '../markdown';
-import { Bot, Clock, FileCheck } from 'lucide-react';
+import { Bot, Clock, FileCheck, Search, BookOpen } from 'lucide-react';
 
 interface FinalReportProps {
   id: string;
-  state: string;
   text?: string;    
   errorText?: string;
+  sources?: any[];
+  phase?: string;
 }
 
-export function FinalReport({ id, state, text, errorText }: FinalReportProps) {
+export function FinalReport({ id, text, errorText, sources, phase }: FinalReportProps) {
   const callId = id;
 
   const getHeaderContent = () => {
-    switch (state) {
-      case 'input-streaming':
-        return (
-            <>
-              <Clock className="w-4 h-4 text-muted-foreground flex-shrink-0 animate-spin" />
-              <span className="text-sm">Adding citations...</span>
-            </>
-          );
-      case 'input-available':
+    switch (phase) {
+      case 'synthesizing':
         return (
           <>
-            <FileCheck className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-            <span className="text-sm">Final Report Complete</span>
+            <Search className="w-4 h-4 text-muted-foreground flex-shrink-0 animate-pulse" />
+            <span className="text-sm">Synthesizing results...</span>
           </>
         );
-      default:
+      case 'citations':
+        return (
+          <>
+            <BookOpen className="w-4 h-4 text-muted-foreground flex-shrink-0 animate-pulse" />
+            <span className="text-sm">Adding citations...</span>
+          </>
+        );
+      case 'finished':
         return (
           <>
             <FileCheck className="w-4 h-4 text-muted-foreground flex-shrink-0" />
@@ -53,7 +54,7 @@ export function FinalReport({ id, state, text, errorText }: FinalReportProps) {
               {text && (
                 <div className="prose prose-sm max-w-none">
                   <div className="text-card-foreground">
-                    <Markdown>{text}</Markdown>
+                    <Markdown sources={sources}>{text}</Markdown>
                   </div>
                 </div>
               )}

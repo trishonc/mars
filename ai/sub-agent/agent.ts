@@ -1,4 +1,4 @@
-import { tool, streamText, UIMessageStreamWriter, stepCountIs, hasToolCall, smoothStream } from 'ai';
+import { tool, streamText, UIMessageStreamWriter, stepCountIs, hasToolCall, smoothStream} from 'ai';
 import { google, GoogleGenerativeAIProviderOptions } from '@ai-sdk/google';
 import { z } from 'zod';
 import { webSearchTool, webFetchTool, completeTaskTool } from '../tools';
@@ -10,11 +10,11 @@ export const runSubAgentTool = (writer: UIMessageStreamWriter, abortSignal?: Abo
     'Spawn a subagent to research a subtopic. Use this to research a subtopic in depth with specific instructions.',
   inputSchema: z.object({
     taskName: z.string().describe('The subtopic to research.'),
-    taskDescription: z.string().describe('Detailed instructions for the subagent including: research objective, desired output format, source preferences, task boundaries, and narrative angle. Be specific about what you want the subagent to focus on and avoid.'),
+    taskInstructions: z.string().describe('Detailed instructions for the subagent including: research objective, desired output format, source preferences, task boundaries, and narrative angle. Be specific about what you want the subagent to focus on and avoid.'),
   }),
-  execute: async ({ taskName, taskDescription }, { toolCallId }) => {
+  execute: async ({ taskName, taskInstructions }, { toolCallId }) => {
     console.log(`Running subagent with taskName: "${taskName}"`);
-    console.log(`Instructions: "${taskDescription}"`);
+    console.log(`Instructions: "${taskInstructions}"`);
 
     writer.write({ 
       type: 'data-subagent',
@@ -28,14 +28,12 @@ export const runSubAgentTool = (writer: UIMessageStreamWriter, abortSignal?: Abo
     
     try {
       const subagentResult = await streamText({
-        model: google(MODEL_CONFIG.SUB_AGENT_MODEL),
+        model: MODEL_CONFIG.SUB_AGENT_MODEL,
         system: SUB_AGENT_PROMPT,
         prompt: `Research the following task: ${taskName}
 
-HERE IS THE TASK DESCRIPTION FROM LEAD AGENT:
-${taskDescription}
-
-Follow these instructions carefully while applying your research methodology. Use the search tool to gather information, crawl relevant URLs, and then call complete_task with your synthesized report.`,
+        HERE ARE THE TASK INSTRUCTIONS FROM LEAD AGENT:
+        ${taskInstructions}`,
         tools: {
           web_search: webSearchTool,
           web_fetch: webFetchTool,
@@ -44,13 +42,7 @@ Follow these instructions carefully while applying your research methodology. Us
         abortSignal,
         temperature: MODEL_CONFIG.TEMPERATURE,
         maxOutputTokens: MODEL_CONFIG.MAX_OUTPUT_TOKENS,
-        providerOptions: {
-          google: {
-            thinkingConfig: {
-              thinkingBudget: 2048,
-            },
-          } satisfies GoogleGenerativeAIProviderOptions,
-        },
+        providerOptions: MODEL_CONFIG.PROVIDER_OPTIONS,
         stopWhen: [
           stepCountIs(AGENT_CONFIG.SUBAGENT_MAX_STEPS),
           hasToolCall('complete_task'),
@@ -69,9 +61,10 @@ Follow these instructions carefully while applying your research methodology. Us
       
       for await (const part of subagentResult.fullStream) {
         
-        if (part.type === 'tool-result' && part.toolName === 'web_search') {
+        if (part.type === 'tool-result' && part.toolName === 'web_search' && part.output?.results) {
+          console.log('Tool Result part', part);
           toolCalls.push({
-            type: 'web_search',
+            toolName: part.toolName,
             query: part.input.query,
             results: part.output?.results && Array.isArray(part.output.results) ? part.output.results : [],
           });
@@ -86,9 +79,9 @@ Follow these instructions carefully while applying your research methodology. Us
             id: toolCallId,
           });
         }
-        if (part.type === 'tool-result' && part.toolName === 'web_fetch') {
+        if (part.type === 'tool-result' && part.toolName === 'web_fetch' && part.output?.title) {
           toolCalls.push({
-            type: 'web_fetch',
+            toolName: part.toolName,
             url: part.input.url,
             title: part.output?.title,
           });
@@ -103,7 +96,7 @@ Follow these instructions carefully while applying your research methodology. Us
             id: toolCallId,
           });
         }
-        if (part.type === 'tool-result' && part.toolName === 'complete_task') {
+        if (part.type === 'tool-call' && part.toolName === 'complete_task') {
           writer.write({ 
             type: 'data-subagent',
             data: {

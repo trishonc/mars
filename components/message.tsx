@@ -41,6 +41,7 @@ export function Message({ message, status }: MessageProps) {
       case 'data-subagent':
         return (
           <div key={key} className="w-full">
+
             <SubAgent
               id={part.id}
               title={part.data.title}
@@ -50,17 +51,26 @@ export function Message({ message, status }: MessageProps) {
           </div>
         );
 
-      case 'tool-complete_report':
+      case 'data-report':
         return (
           <div key={key} className="w-full">
-            <FinalReport 
+            <FinalReport
               id={part.id}
-              state={status === 'ready' ? 'done' : part.state}
-              text={part.input?.exact_text_with_citations}
+              text={part.data.report}
+              sources={part.data.sources}
               errorText={part.errorText}
+              phase={part.data.phase}
             />
           </div>
         );
+      
+      // case 'tool-complete_task':
+      //   switch(part.state) {
+      //     case 'input-streaming':
+      //       console.log('input-streaming', part.input);
+      //     case 'input-available':
+      //       console.log('input-available', part.input);
+      //   }
 
       case 'tool-save_plan':
         return (
@@ -87,7 +97,7 @@ export function Message({ message, status }: MessageProps) {
             />
           </div>
         );
-
+        
       default:
         return null;
     }

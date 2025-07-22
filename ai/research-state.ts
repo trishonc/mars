@@ -1,16 +1,5 @@
-export interface SourceWithContent {
-  url: string;
-  content: string;
-  title?: string;
-}
+import { ResearchState } from "./types";
 
-export interface ResearchState {
-  sources: SourceWithContent[];
-  plan: string | null;
-  report: string | null;
-}
-
-// Global research state
 export let researchState: ResearchState = {
   sources: [],
   plan: null,

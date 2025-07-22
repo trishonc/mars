@@ -47,7 +47,7 @@ export const webFetchTool = tool({
       const existingSource = researchState.sources.find(source => source.url === url);
       if (existingSource) {
         console.log(`Source already exists in research state: ${url}`);
-        return { results: existingSource.content, title: existingSource.title || null };
+        return { results: 'This page was already visited during this research task.', title: null };
       }
 
       const response: SearchResponse<{ text: true }> = await exa.getContents([url], { text: true });
@@ -90,7 +90,13 @@ export const completeReportTool = tool({
   description: 'Complete the final report with proper citations added.',
   inputSchema: z.object({
     exact_text_with_citations: z.string().describe('The final report text with citations added in the format [1], [2], etc.'),
-  })
+  }),
+  execute: async ({ exact_text_with_citations }) => {
+    return { 
+      report: exact_text_with_citations,
+      sources: researchState.sources 
+    };
+  },
 });
 
 export const savePlanTool = tool({

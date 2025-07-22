@@ -1,9 +1,7 @@
-import { streamText, UIMessage, convertToModelMessages, UIMessageStreamWriter, stepCountIs, hasToolCall, smoothStream } from 'ai';
-import { google, GoogleGenerativeAIProviderOptions } from '@ai-sdk/google';
+import { streamText, UIMessage, convertToModelMessages, UIMessageStreamWriter, stepCountIs, hasToolCall, smoothStream} from 'ai';
 import { researchState } from '../research-state';
 import { completeTaskTool, savePlanTool, readPlanTool } from '../tools';
 import { runSubAgentTool } from '../sub-agent/agent';
-import { runCitationsAgent } from '../citations-agent/agent';
 import { LEAD_AGENT_PROMPT } from './prompt';
 import { MODEL_CONFIG, AGENT_CONFIG } from '../config';
 
@@ -16,22 +14,17 @@ export async function runResearchAgent(messages: UIMessage[], writer: UIMessageS
   };
   
   const leadAgentResult = await streamText({
-    model: google(MODEL_CONFIG.LEAD_AGENT_MODEL),
+    model: MODEL_CONFIG.LEAD_AGENT_MODEL,
     system: LEAD_AGENT_PROMPT,
     messages: convertToModelMessages(messages),
     tools,
     abortSignal,
     temperature: MODEL_CONFIG.TEMPERATURE,
     maxOutputTokens: MODEL_CONFIG.MAX_OUTPUT_TOKENS,
-    providerOptions: {
-      google: {
-        thinkingConfig: {
-          includeThoughts: true,
-          thinkingBudget: 2048,
-        },
-      } satisfies GoogleGenerativeAIProviderOptions,
-    },
-    experimental_transform: smoothStream({ chunking: /.{1}/g }),
+    providerOptions: MODEL_CONFIG.PROVIDER_OPTIONS,
+    experimental_transform: [
+      smoothStream({ chunking: /.{1}/g }),
+    ],
     stopWhen: [
       stepCountIs(AGENT_CONFIG.LEAD_AGENT_MAX_STEPS),
       hasToolCall('complete_task'),
@@ -47,6 +40,20 @@ export async function runResearchAgent(messages: UIMessage[], writer: UIMessageS
           toolChoice: { type: 'tool', toolName: 'complete_task' },
         };
       }
+    },
+    onChunk({ chunk }) {
+      if (chunk.type === 'tool-input-start' && chunk.toolName === 'complete_task') {
+        writer.write({
+          type: 'data-report',
+          data: {
+            phase: 'synthesizing',
+            report: '',
+            sources: [],
+          },
+          id: 'data-report',
+        });
+      }
+        
     },
   });
 
@@ -64,7 +71,5 @@ export async function runResearchAgent(messages: UIMessage[], writer: UIMessageS
   }
 
   // Save final report to research state
-  researchState.report = finalReportOutput.report;
-
-  await runCitationsAgent(writer, abortSignal);
+  researchState.report = finalReportOutput.report;  
 } 

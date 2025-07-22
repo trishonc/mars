@@ -19,19 +19,19 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div className="h-screen bg-background text-foreground flex flex-col">
-            <Header />
-            <main className="flex-1 flex flex-col w-full min-h-0">
-              {children}
-            </main>
-          </div>
-        </ThemeProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="h-screen bg-background text-foreground flex flex-col">
+              <Header />
+              <main className="flex-1 flex flex-col w-full min-h-0">
+                {children}
+              </main>
+            </div>
+          </ThemeProvider>
       </body>
     </html>
   );

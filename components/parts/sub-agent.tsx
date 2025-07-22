@@ -14,13 +14,13 @@ interface SearchResult {
 }
 
 interface WebSearchToolCall {
-  type: 'web_search';
+  toolName: 'web_search';
   query?: string;
   results?: SearchResult[];
 }
 
 interface WebFetchToolCall {
-  type: 'web_fetch';
+  toolName: 'web_fetch';
   url?: string;
   title?: string;
 }
@@ -35,10 +35,10 @@ interface SubAgentProps {
 }
 
 export function SubAgent({ id, title, toolCalls, state }: SubAgentProps) {
-  const sourceCount = toolCalls.filter(call => call.type === 'web_fetch').length;
+  const sourceCount = toolCalls.filter(call => call.toolName === 'web_fetch').length;
   
   const renderToolCall = (toolCall: ToolCall, index: number) => {
-    if (toolCall.type === 'web_search') {
+    if (toolCall.toolName === 'web_search') {
       return (
         <WebSearch 
           key={`${id}-tool-${index}`}
@@ -48,7 +48,7 @@ export function SubAgent({ id, title, toolCalls, state }: SubAgentProps) {
           searchIndex={index}
         />
       );
-    } else if (toolCall.type === 'web_fetch') {
+    } else if (toolCall.toolName === 'web_fetch') {
       return (
         <WebFetch 
           key={`${id}-tool-${index}`}

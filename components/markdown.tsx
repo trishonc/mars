@@ -2,9 +2,34 @@ import Link from "next/link";
 import React, { memo } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import { CitationsCard } from "./citations-card";
 
-const NonMemoizedMarkdown = ({ children }: { children: string }) => {
+interface Source {
+  url: string;
+  title?: string;
+  content?: string;
+}
+
+interface MarkdownProps {
+  children: string;
+  sources?: Source[];
+}
+
+const NonMemoizedMarkdown = ({ children, sources = [] }: MarkdownProps) => {
   const components = {
+    // Custom citation component
+    citation: ({ children: citationNumber, ...props }: any) => {
+      const num = parseInt(citationNumber?.toString() || '1', 10);
+      const source = sources[num - 1] || {};
+      return (
+        <CitationsCard
+          citationNumber={num}
+          url={source.url}
+          title={source.title || ''}
+        />
+      );
+    },
     code: ({ node, inline, className, children, ...props }: any) => {
       const match = /language-(\w+)/.exec(className || "");
       return !inline && match ? (
@@ -108,7 +133,11 @@ const NonMemoizedMarkdown = ({ children }: { children: string }) => {
   };
 
   return (
-    <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
+    <ReactMarkdown 
+      remarkPlugins={[remarkGfm]} 
+      rehypePlugins={[rehypeRaw]}
+      components={components}
+    >
       {children}
     </ReactMarkdown>
   );
