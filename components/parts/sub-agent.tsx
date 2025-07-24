@@ -61,39 +61,39 @@ export function SubAgent({ id, title, toolCalls, state }: SubAgentProps) {
   };
   
   return (
-    <Card className="w-full p-0">
-      <Accordion type="single" collapsible>
-        <AccordionItem value={id} className="border-none">
-          <AccordionTrigger className="hover:no-underline px-4 py-3">
-            <div className="flex items-center gap-3 w-full min-w-0">
-              <div className="flex-shrink-0">
-                {state === 'streaming' ? (
-                  <Loader2 className="size-4 text-primary animate-spin" />
-                ) : (
-                  <Check className="size-4 text-muted-foreground" />
-                )}
+      <Card className="p-0 w-full">
+        <Accordion type="single" collapsible>
+          <AccordionItem value={id} className="border-none">
+            <AccordionTrigger className="hover:no-underline px-4 py-3">
+              <div className="flex items-center gap-3 w-full min-w-0">
+                <div className="flex-shrink-0">
+                  {state === 'streaming' ? (
+                    <Loader2 className="size-4 text-primary animate-spin" />
+                  ) : (
+                    <Check className="size-4 text-muted-foreground" />
+                  )}
+                </div>
+                <div className="flex-1 text-left min-w-0">
+                  <span className="text-base font-semibold break-word">{title}</span>
+                </div>
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  {sourceCount > 0 && (
+                    <span className="text-xs text-muted-foreground">
+                      {sourceCount} source{sourceCount !== 1 ? 's' : ''}
+                    </span>
+                  )}
+                </div>
               </div>
-              <div className="flex-1 text-left min-w-0">
-                <span className="text-base font-semibold break-word">{title}</span>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="px-4">
+                <div className="space-y-2">
+                  {toolCalls.map((toolCall, index) => renderToolCall(toolCall, index))}
+                </div>
               </div>
-              <div className="flex items-center gap-3 flex-shrink-0">
-                {sourceCount > 0 && (
-                  <span className="text-xs text-muted-foreground">
-                    {sourceCount} source{sourceCount !== 1 ? 's' : ''}
-                  </span>
-                )}
-              </div>
-            </div>
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="px-4">
-              <div className="space-y-2">
-                {toolCalls.map((toolCall, index) => renderToolCall(toolCall, index))}
-              </div>
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </Card>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </Card>
   );
 }

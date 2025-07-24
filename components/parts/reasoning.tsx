@@ -4,14 +4,15 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Brain, Clock } from 'lucide-react';
 import React, { useEffect, useRef } from 'react';
-import { Markdown } from '../markdown';
+import { MemoizedMarkdown } from '../markdown';
 
 interface ReasoningProps {
+  id: string;
   text: string;
   state?: 'streaming' | 'done';
 }
 
-export function Reasoning({ text, state }: ReasoningProps) {
+export function Reasoning({ id, text, state }: ReasoningProps) {
   const startTimeRef = useRef<number | null>(null);
   const [duration, setDuration] = React.useState<number | null>(null);
   // Track when thinking starts
@@ -52,27 +53,27 @@ export function Reasoning({ text, state }: ReasoningProps) {
   };
   
   return (
-    <Card className="p-0">
-      <Accordion type="single" collapsible>
-        <AccordionItem value="reasoning" className="border-none">
-          <AccordionTrigger className="hover:no-underline px-4 py-3">
-            <div className="flex items-center gap-3 w-full min-w-0">
-              {getHeaderContent()}
-            </div>
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="px-4">
-              {text && (
-                  <div className="prose prose-sm max-w-none">
-                    <div className="text-card-foreground">
-                      <Markdown>{text}</Markdown>
-                    </div>
-                </div>
-              )}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
-    </Card>
+      <Card className="p-0 w-full">
+        <Accordion type="single" collapsible>
+          <AccordionItem value="reasoning" className="border-none">
+            <AccordionTrigger className="hover:no-underline px-4 py-3">
+              <div className="flex items-center gap-3 w-full min-w-0">
+                {getHeaderContent()}
+              </div>
+            </AccordionTrigger>
+            <AccordionContent>
+              <div className="px-4">
+                {text && (
+                    <div className="prose prose-sm max-w-none">
+                      <div className="text-card-foreground">
+                        <MemoizedMarkdown id={id} content={text} />
+                      </div>
+                  </div>
+                )}
+              </div>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </Card>
   );
 }

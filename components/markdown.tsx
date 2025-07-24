@@ -1,9 +1,10 @@
-import Link from "next/link";
-import React, { memo } from "react";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
-import rehypeRaw from "rehype-raw";
-import { CitationsCard } from "./citations-card";
+import { marked } from 'marked';
+import { memo, useMemo } from 'react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import { MemoizedCitationsCard } from './citations-card';
+import Link from 'next/link';
 
 interface Source {
   url: string;
@@ -11,139 +12,153 @@ interface Source {
   content?: string;
 }
 
-interface MarkdownProps {
-  children: string;
-  sources?: Source[];
+function parseMarkdownIntoBlocks(markdown: string): string[] {
+  const tokens = marked.lexer(markdown);
+  return tokens.map(token => token.raw);
 }
 
-const NonMemoizedMarkdown = ({ children, sources = [] }: MarkdownProps) => {
-  const components = {
-    // Custom citation component
-    citation: ({ children: citationNumber, ...props }: any) => {
-      const num = parseInt(citationNumber?.toString() || '1', 10);
-      const source = sources[num - 1] || {};
-      return (
-        <CitationsCard
-          citationNumber={num}
-          url={source.url}
-          title={source.title || ''}
-        />
-      );
-    },
-    code: ({ node, inline, className, children, ...props }: any) => {
-      const match = /language-(\w+)/.exec(className || "");
-      return !inline && match ? (
-        <pre
-          {...props}
-          className={`${className} text-sm w-[80dvw] md:max-w-[500px] overflow-x-scroll bg-muted p-3 rounded-lg mt-2`}
-        >
-          <code className={match[1]}>{children}</code>
-        </pre>
-      ) : (
-        <code
-          className={`${className} text-sm bg-muted py-0.5 px-1 rounded-md`}
-          {...props}
-        >
-          {children}
-        </code>
-      );
-    },
-    ol: ({ node, children, ...props }: any) => {
-      return (
-        <ol className="list-decimal list-outside ml-4" {...props}>
-          {children}
-        </ol>
-      );
-    },
-    li: ({ node, children, ...props }: any) => {
-      return (
-        <li className="py-1" {...props}>
-          {children}
-        </li>
-      );
-    },
-    ul: ({ node, children, ...props }: any) => {
-      return (
-        <ul className="list-decimal list-outside ml-4" {...props}>
-          {children}
-        </ul>
-      );
-    },
-    strong: ({ node, children, ...props }: any) => {
-      return (
-        <span className="font-semibold" {...props}>
-          {children}
-        </span>
-      );
-    },
-    a: ({ node, children, ...props }: any) => {
-      return (
-        <Link
-          className="text-primary hover:underline"
-          target="_blank"
-          rel="noreferrer"
-          {...props}
-        >
-          {children}
-        </Link>
-      );
-    },
-    h1: ({ node, children, ...props }: any) => {
-      return (
-        <h1 className="text-3xl font-semibold mt-3 mb-2" {...props}>
-          {children}
-        </h1>
-      );
-    },
-    h2: ({ node, children, ...props }: any) => {
-      return (
-        <h2 className="text-2xl font-semibold mt-3 mb-2" {...props}>
-          {children}
-        </h2>
-      );
-    },
-    h3: ({ node, children, ...props }: any) => {
-      return (
-        <h3 className="text-xl font-semibold mt-3 mb-2" {...props}>
-          {children}
-        </h3>
-      );
-    },
-    h4: ({ node, children, ...props }: any) => {
-      return (
-        <h4 className="text-lg font-semibold mt-3 mb-2" {...props}>
-          {children}
-        </h4>
-      );
-    },
-    h5: ({ node, children, ...props }: any) => {
-      return (
-        <h5 className="text-base font-semibold mt-3 mb-2" {...props}>
-          {children}
-        </h5>
-      );
-    },
-    h6: ({ node, children, ...props }: any) => {
-      return (
-        <h6 className="text-sm font-semibold mt-3 mb-2" {...props}>
-          {children}
-        </h6>
-      );
-    },
-  };
-
-  return (
-    <ReactMarkdown 
-      remarkPlugins={[remarkGfm]} 
-      rehypePlugins={[rehypeRaw]}
-      components={components}
-    >
-      {children}
-    </ReactMarkdown>
-  );
-};
-
-export const Markdown = memo(
-  NonMemoizedMarkdown,
-  (prevProps, nextProps) => prevProps.children === nextProps.children,
+const MemoizedMarkdownBlock = memo(
+  ({ content, sources = [] }: { content: string; sources?: Source[] }) => {
+    const components = {
+        // Custom citation component
+        citation: ({ children: citationNumber, ...props }: any) => {
+          const num = parseInt(citationNumber?.toString() || '1', 10);
+          const source = sources[num - 1] || {};
+          return (
+            <MemoizedCitationsCard
+              citationNumber={num}
+              url={source.url}
+              title={source.title || ''}
+            />
+          );
+        },
+        code: ({ node, inline, className, children, ...props }: any) => {
+          const match = /language-(\w+)/.exec(className || "");
+          return !inline && match ? (
+            <pre
+              {...props}
+              className={`${className} text-sm w-[80dvw] md:max-w-[500px] overflow-x-scroll bg-muted p-3 rounded-lg mt-2`}
+            >
+              <code className={match[1]}>{children}</code>
+            </pre>
+          ) : (
+            <code
+              className={`${className} text-sm bg-muted py-0.5 px-1 rounded-md`}
+              {...props}
+            >
+              {children}
+            </code>
+          );
+        },
+        ol: ({ node, children, ...props }: any) => {
+          return (
+            <ol className="list-decimal list-outside ml-4" {...props}>
+              {children}
+            </ol>
+          );
+        },
+        li: ({ node, children, ...props }: any) => {
+          return (
+            <li className="py-1" {...props}>
+              {children}
+            </li>
+          );
+        },
+        ul: ({ node, children, ...props }: any) => {
+          return (
+            <ul className="list-decimal list-outside ml-4" {...props}>
+              {children}
+            </ul>
+          );
+        },
+        strong: ({ node, children, ...props }: any) => {
+          return (
+            <span className="font-semibold" {...props}>
+              {children}
+            </span>
+          );
+        },
+        a: ({ node, children, ...props }: any) => {
+          return (
+            <Link
+              className="text-primary hover:underline"
+              target="_blank"
+              rel="noreferrer"
+              {...props}
+            >
+              {children}
+            </Link>
+          );
+        },
+        h1: ({ node, children, ...props }: any) => {
+          return (
+            <h1 className="text-3xl font-semibold mt-3 mb-2" {...props}>
+              {children}
+            </h1>
+          );
+        },
+        h2: ({ node, children, ...props }: any) => {
+          return (
+            <h2 className="text-2xl font-semibold mt-3 mb-2" {...props}>
+              {children}
+            </h2>
+          );
+        },
+        h3: ({ node, children, ...props }: any) => {
+          return (
+            <h3 className="text-xl font-semibold mt-3 mb-2" {...props}>
+              {children}
+            </h3>
+          );
+        },
+        h4: ({ node, children, ...props }: any) => {
+          return (
+            <h4 className="text-lg font-semibold mt-3 mb-2" {...props}>
+              {children}
+            </h4>
+          );
+        },
+        h5: ({ node, children, ...props }: any) => {
+          return (
+            <h5 className="text-base font-semibold mt-3 mb-2" {...props}>
+              {children}
+            </h5>
+          );
+        },
+        h6: ({ node, children, ...props }: any) => {
+          return (
+            <h6 className="text-sm font-semibold mt-3 mb-2" {...props}>
+              {children}
+            </h6>
+          );
+        },
+    } as any;
+    return (
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw]}
+        components={components}
+      >
+        {content}
+      </ReactMarkdown>
+    );
+  },
+  (prevProps, nextProps) => {
+    if (prevProps.content !== nextProps.content) return false;
+    return true;
+  },
 );
+
+MemoizedMarkdownBlock.displayName = 'MemoizedMarkdownBlock';
+
+export const MemoizedMarkdown = memo(
+  ({ content, id, sources = [] }: { content: string; id: string; sources?: Source[] }) => {
+    const blocks = useMemo(() => parseMarkdownIntoBlocks(content), [content]);
+
+    return blocks.map((block, index) => (
+      <MemoizedMarkdownBlock content={block} sources={sources} key={`${id}-block_${index}`} />
+    ));
+  },
+);
+
+MemoizedMarkdown.displayName = 'MemoizedMarkdown';

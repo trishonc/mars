@@ -1,4 +1,5 @@
 import { openai } from '@ai-sdk/openai';
+import { google } from '@ai-sdk/google';
 
 export const SEARCH_CONFIG = {
   MAX_SEARCH_RESULTS: 5,
@@ -6,23 +7,35 @@ export const SEARCH_CONFIG = {
 
 // Model and Provider Configuration  
 export const MODEL_CONFIG = {
-  LEAD_AGENT_MODEL: openai("gpt-4.1-mini"),
-  SUB_AGENT_MODEL: openai("gpt-4.1-mini"),
-  CITATIONS_MODEL: openai("gpt-4.1-mini"),
-  PROVIDER_OPTIONS: {
-    openai: {
-      reasoningEffort: "low",
-      // reasoningSummary: "auto",
+  LEAD_AGENT: {
+    model: openai("gpt-4.1-mini"),
+    providerOptions: {
+      openai: {
+        reasoningEffort: "low",
+        // reasoningSummary: "auto",
+      },
     },
   },
-  // PROVIDER_OPTIONS: {
-  //   google: {
-  //     thinkingConfig: {
-  //       includeThoughts: true,
-  //       thinkingBudget: 2048,
-  //     },
-  //   },
-  // },
+  SUB_AGENT: {
+    model: openai("gpt-4.1-mini"),
+    providerOptions: {
+      openai: {
+        reasoningEffort: "low",
+        // reasoningSummary: "auto",
+      },
+    },
+  },
+  CITATIONS: {
+    model: google("gemini-2.5-flash-lite"),
+    providerOptions: {
+      google: {
+        thinkingConfig: {
+          includeThoughts: true,
+          thinkingBudget: 0,
+        },
+      },
+    },
+  },
   TEMPERATURE: 1.0,
   MAX_OUTPUT_TOKENS: 65536,
 } as const;

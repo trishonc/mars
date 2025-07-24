@@ -1,5 +1,6 @@
 "use client";
 
+import { memo } from "react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
@@ -61,3 +62,6 @@ export function CitationsCard({ citationNumber, url, title }: CitationsCardProps
     </HoverCard>
   );
 } 
+
+export const MemoizedCitationsCard = memo(CitationsCard);
+MemoizedCitationsCard.displayName = "MemoizedCitationsCard"; 

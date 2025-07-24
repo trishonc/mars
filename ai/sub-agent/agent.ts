@@ -1,5 +1,4 @@
 import { tool, streamText, UIMessageStreamWriter, stepCountIs, hasToolCall, smoothStream} from 'ai';
-import { google, GoogleGenerativeAIProviderOptions } from '@ai-sdk/google';
 import { z } from 'zod';
 import { webSearchTool, webFetchTool, completeTaskTool } from '../tools';
 import { SUB_AGENT_PROMPT } from './prompt';
@@ -28,7 +27,7 @@ export const runSubAgentTool = (writer: UIMessageStreamWriter, abortSignal?: Abo
     
     try {
       const subagentResult = await streamText({
-        model: MODEL_CONFIG.SUB_AGENT_MODEL,
+        model: MODEL_CONFIG.SUB_AGENT.model,
         system: SUB_AGENT_PROMPT,
         prompt: `Research the following task: ${taskName}
 
@@ -42,7 +41,7 @@ export const runSubAgentTool = (writer: UIMessageStreamWriter, abortSignal?: Abo
         abortSignal,
         temperature: MODEL_CONFIG.TEMPERATURE,
         maxOutputTokens: MODEL_CONFIG.MAX_OUTPUT_TOKENS,
-        providerOptions: MODEL_CONFIG.PROVIDER_OPTIONS,
+        providerOptions: MODEL_CONFIG.SUB_AGENT.providerOptions,
         stopWhen: [
           stepCountIs(AGENT_CONFIG.SUBAGENT_MAX_STEPS),
           hasToolCall('complete_task'),

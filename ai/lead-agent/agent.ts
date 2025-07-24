@@ -14,14 +14,14 @@ export async function runResearchAgent(messages: UIMessage[], writer: UIMessageS
   };
   
   const leadAgentResult = await streamText({
-    model: MODEL_CONFIG.LEAD_AGENT_MODEL,
+    model: MODEL_CONFIG.LEAD_AGENT.model,
     system: LEAD_AGENT_PROMPT,
     messages: convertToModelMessages(messages),
     tools,
     abortSignal,
     temperature: MODEL_CONFIG.TEMPERATURE,
     maxOutputTokens: MODEL_CONFIG.MAX_OUTPUT_TOKENS,
-    providerOptions: MODEL_CONFIG.PROVIDER_OPTIONS,
+    providerOptions: MODEL_CONFIG.LEAD_AGENT.providerOptions,
     experimental_transform: [
       smoothStream({ chunking: /.{1}/g }),
     ],
