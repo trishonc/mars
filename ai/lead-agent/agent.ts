@@ -7,7 +7,7 @@ import { MODEL_CONFIG, AGENT_CONFIG } from '../config';
 
 export async function runResearchAgent(messages: UIMessage[], writer: UIMessageStreamWriter, abortSignal?: AbortSignal) {
   const tools = {
-    run_subagent: runSubAgentTool(writer, abortSignal),
+    run_subagent: runSubAgentTool(writer),
     complete_task: completeTaskTool,
     save_plan: savePlanTool,
     read_plan: readPlanTool,

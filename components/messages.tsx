@@ -3,11 +3,11 @@
 import { useScrollToBottom } from '@/hooks/use-scroll-to-bottom';
 import { Message } from './message';
 import { LoadingDots } from './loading-dots';
-import { ScrollArea } from './ui/scroll-area';
+import { MyUIMessage } from '@/ai/types';
 
 interface MessagesProps {
-  messages: any[];
-  status: string;
+  messages: MyUIMessage[];
+  status: 'submitted' | 'streaming' | 'ready' | 'error';
 }
 
 export function Messages({ messages, status }: MessagesProps) {

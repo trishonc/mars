@@ -1,15 +1,16 @@
 'use client';
 
 import { useChat } from '@ai-sdk/react';
-import { InputBox } from '../components/input-box';
+import { InputBox } from './input-box';
 import { useEffect, useRef, useState } from "react";
 import { DefaultChatTransport } from 'ai';
-import { Messages } from '../components/messages';
+import { Messages } from './messages';
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { MyUIMessage } from '@/ai/types';
 
 export function Chat() {
   const [input, setInput] = useState('');
-  const { messages, sendMessage, status, stop } = useChat({
+  const { messages, sendMessage, status, stop } = useChat<MyUIMessage>({
     transport: new DefaultChatTransport({ api: '/api/chat' }),
   });
 

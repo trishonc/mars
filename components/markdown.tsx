@@ -5,12 +5,7 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import { MemoizedCitationsCard } from './citations-card';
 import Link from 'next/link';
-
-interface Source {
-  url: string;
-  title?: string;
-  content?: string;
-}
+import { Source } from '@/ai/types';
 
 function parseMarkdownIntoBlocks(markdown: string): string[] {
   const tokens = marked.lexer(markdown);

@@ -6,60 +6,18 @@ import { Loader2, Check } from 'lucide-react';
 import React from 'react';
 import { WebSearch } from './web-search';
 import { WebFetch } from './web-fetch';
-
-interface SearchResult {
-  url: string;
-  title?: string;
-  text?: string;
-}
-
-interface WebSearchToolCall {
-  toolName: 'web_search';
-  query?: string;
-  results?: SearchResult[];
-}
-
-interface WebFetchToolCall {
-  toolName: 'web_fetch';
-  url?: string;
-  title?: string;
-}
-
-type ToolCall = WebSearchToolCall | WebFetchToolCall;
+import { SubAgentToolCall } from '@/ai/types';
 
 interface SubAgentProps {
   id: string;
   title: string;
-  toolCalls: ToolCall[];
+  toolCalls: SubAgentToolCall[];
   state: 'streaming' | 'done';
 }
 
 export function SubAgent({ id, title, toolCalls, state }: SubAgentProps) {
   const sourceCount = toolCalls.filter(call => call.toolName === 'web_fetch').length;
-  
-  const renderToolCall = (toolCall: ToolCall, index: number) => {
-    if (toolCall.toolName === 'web_search') {
-      return (
-        <WebSearch 
-          key={`${id}-tool-${index}`}
-          query={toolCall.query}
-          results={toolCall.results || []}
-          subAgentId={id}
-          searchIndex={index}
-        />
-      );
-    } else if (toolCall.toolName === 'web_fetch') {
-      return (
-        <WebFetch 
-          key={`${id}-tool-${index}`}
-          url={toolCall.url!}
-          title={toolCall.title}
-        />
-      );
-    }
-    return null;
-  };
-  
+
   return (
       <Card className="p-0 w-full">
         <Accordion type="single" collapsible>
@@ -88,7 +46,28 @@ export function SubAgent({ id, title, toolCalls, state }: SubAgentProps) {
             <AccordionContent>
               <div className="px-4">
                 <div className="space-y-2">
-                  {toolCalls.map((toolCall, index) => renderToolCall(toolCall, index))}
+                  {toolCalls.map((toolCall, index) => {
+                    if (toolCall.toolName === 'web_search') {
+                      return (
+                        <WebSearch 
+                          key={toolCall.toolCallId}
+                          query={toolCall.input.query}
+                          results={toolCall.output.results || []}
+                          subAgentId={id}
+                          searchIndex={index}
+                        />
+                      );
+                    } else if (toolCall.toolName === 'web_fetch') {
+                      return (
+                        <WebFetch 
+                          key={toolCall.toolCallId}
+                          url={toolCall.input.url}
+                          title={toolCall.output.title || ''}
+                        />
+                      );
+                    }
+                    return null;
+                  })}
                 </div>
               </div>
             </AccordionContent>

@@ -5,22 +5,17 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Globe, Link } from 'lucide-react';
 import React from 'react';
 import { getFaviconUrl } from '@/lib/utils';
-
-interface SearchResult {
-  url: string;
-  title?: string;
-  text?: string;
-}
+import { SearchResult } from 'exa-js';
 
 interface WebSearchProps {
   query?: string;
-  results: SearchResult[];
+  results: SearchResult<{}>[];
   subAgentId: string;
   searchIndex: number;
 }
 
 export function WebSearch({ query, results, subAgentId, searchIndex }: WebSearchProps) {
-  const renderSearchResult = (result: SearchResult, index: number) => {
+  const renderSearchResult = (result: SearchResult<{}>, index: number) => {
     const faviconUrl = getFaviconUrl(result.url);
     
     return (
@@ -98,7 +93,7 @@ export function WebSearch({ query, results, subAgentId, searchIndex }: WebSearch
             <div className="px-0">
               <div className="space-y-2">
                 {results.length > 0 ? (
-                  results.map((result: SearchResult, index: number) => renderSearchResult(result, index))
+                  results.map((result: SearchResult<{}>, index: number) => renderSearchResult(result, index))
                 ) : (
                   <div className="text-sm text-muted-foreground px-4 py-3">No results found</div>
                 )}

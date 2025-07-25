@@ -12,6 +12,10 @@ export const webSearchTool = tool({
   inputSchema: z.object({
     query: z.string().describe('The search query to use.'),
   }),
+  outputSchema: z.object({
+    message: z.string(),
+    results: z.array(z.any()).nullable(),
+  }),
   execute: async ({ query }) => {
     try {
       console.log(`Executing search tool with query: "${query}"`);
@@ -25,13 +29,13 @@ export const webSearchTool = tool({
       const searchResults = response.results || [];
 
       if (searchResults.length === 0) {
-        return { results: 'No search results found.' };
+        return { message: 'No search results found.', results: null };
       }
       
-      return { results: searchResults };
+      return { message: `Found ${searchResults.length} search results.`, results: searchResults };
     } catch (error) {
       console.error('Error executing search tool:', error);
-      return { results: 'An error occurred while searching the web.' };
+      return { message: 'An error occurred while searching the web.', results: null };
     }
   },
 });
@@ -41,13 +45,18 @@ export const webFetchTool = tool({
   inputSchema: z.object({
     url: z.string().describe('The URL to fetch.'),
   }),
+  outputSchema: z.object({
+    message: z.string(),
+    content: z.string().nullable(),
+    title: z.string().nullable(),
+  }),
   execute: async ({ url }) => {
     try {
       // Check if this URL already exists in sources
       const existingSource = researchState.sources.find(source => source.url === url);
       if (existingSource) {
         console.log(`Source already exists in research state: ${url}`);
-        return { results: 'This page was already visited during this research task.', title: null };
+        return { message: 'This page was already visited during this research task.', content: null, title: null };
       }
 
       const response: SearchResponse<{ text: true }> = await exa.getContents([url], { text: true });
@@ -69,11 +78,13 @@ export const webFetchTool = tool({
           title: title || undefined
         });
         console.log(`Added source to research state: ${url}. Total sources: ${researchState.sources.length}`);
+        return { message: 'Successfully fetched and added to research state.', content, title };
       }
-      return { results: content, title };
+      
+      return { message: 'No content found at the URL.', content: null, title };
     } catch (error) {
       console.error(`Error executing web fetch tool for ${url}:`, error);
-      return { results: `An error occurred while fetching ${url}.`, title: null };
+      return { message: `An error occurred while fetching ${url}.`, content: null, title: null };
     }
   }
 });
@@ -83,26 +94,16 @@ export const completeTaskTool = tool({
   inputSchema: z.object({
     title: z.string().describe('The title of the report based on the findings.'),
     report: z.string().describe('The final report in markdown format.'),
-  })
-});
-
-export const completeReportTool = tool({
-  description: 'Complete the final report with proper citations added.',
-  inputSchema: z.object({
-    exact_text_with_citations: z.string().describe('The final report text with citations added in the format [1], [2], etc.'),
-  }),
-  execute: async ({ exact_text_with_citations }) => {
-    return { 
-      report: exact_text_with_citations,
-      sources: researchState.sources 
-    };
-  },
+  }) 
 });
 
 export const savePlanTool = tool({
   description: 'Save the current research plan to memory for later retrieval.',
   inputSchema: z.object({
     plan: z.string().describe('The research plan to save written in markdown format, including strategy, subagent tasks, and expected outcomes.'),
+  }),
+  outputSchema: z.object({
+    message: z.string(),
   }),
   execute: async ({ plan }) => {
     researchState.plan = plan;
@@ -114,6 +115,10 @@ export const savePlanTool = tool({
 export const readPlanTool = tool({
   description: 'Retrieve the previously saved research plan from memory.',
   inputSchema: z.object({}),
+  outputSchema: z.object({
+    plan: z.string().nullable(),
+    message: z.string(),
+  }),
   execute: async ({}) => {
     if (!researchState.plan) {
       return { plan: null, message: 'No plan has been saved yet' };

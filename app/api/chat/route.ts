@@ -2,12 +2,13 @@ import { runResearchAgent } from '@/ai/lead-agent/agent';
 import { runCitationsAgent } from '@/ai/citations-agent/agent';
 import { initResearchState } from '@/ai/research-state';
 import { createUIMessageStream, createUIMessageStreamResponse } from 'ai';
+import { MyUIMessage } from '@/ai/types';
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  const { messages }: { messages: MyUIMessage[] } = await req.json();
   const abortSignal = req.signal;
 
-  const stream = createUIMessageStream({
+  const stream = createUIMessageStream<MyUIMessage>({
     async execute({ writer }) {
       initResearchState();
       
