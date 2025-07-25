@@ -12,7 +12,7 @@ export const runSubAgentTool = (writer: UIMessageStreamWriter) => tool({
     taskName: z.string().describe('The subtopic to research.'),
     taskInstructions: z.string().describe('Detailed instructions for the subagent including: research objective, desired output format, source preferences, task boundaries, and narrative angle. Be specific about what you want the subagent to focus on and avoid.'),
   }),
-  execute: async ({ taskName, taskInstructions }, { toolCallId, abortSignal }) => {
+  execute: async ({ taskName, taskInstructions }, { toolCallId: subAgentId, abortSignal }) => {
     console.log(`Running subagent with taskName: "${taskName}"`);
     console.log(`Instructions: "${taskInstructions}"`);
 
@@ -23,7 +23,7 @@ export const runSubAgentTool = (writer: UIMessageStreamWriter) => tool({
         state: 'streaming',
         toolCalls: [],
       },
-      id: toolCallId,
+      id: subAgentId,
     });
     
     try {
@@ -69,6 +69,8 @@ export const runSubAgentTool = (writer: UIMessageStreamWriter) => tool({
             toolCalls.push({ toolCallId, toolName, input, output } as WebFetchTool);
           }
 
+          console.log('toolCalls', toolCalls);
+
           writer.write({ 
             type: 'data-subagent',
             data: {
@@ -76,7 +78,7 @@ export const runSubAgentTool = (writer: UIMessageStreamWriter) => tool({
               state: 'streaming',
               toolCalls: [...toolCalls],
             },
-            id: toolCallId,
+            id: subAgentId,
           });
         }
         if (part.type === 'tool-call' && part.toolName === 'complete_task') {
@@ -86,7 +88,7 @@ export const runSubAgentTool = (writer: UIMessageStreamWriter) => tool({
               title: part.input.title,
               state: 'done',
             },
-            id: toolCallId,
+            id: subAgentId,
           });
         }
       }
