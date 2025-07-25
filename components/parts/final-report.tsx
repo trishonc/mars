@@ -39,24 +39,24 @@ export function FinalReport({ id, text, sources, phase }: FinalReportProps) {
 
   return (
       <Card className="p-0 w-full">
-        <Accordion type="single" collapsible>
+        <Accordion type="single" collapsible value={text ? "final-report" : undefined}>
           <AccordionItem value="final-report" className="border-none">
             <AccordionTrigger className="hover:no-underline px-4 py-3">
               <div className="flex items-center gap-3 w-full min-w-0">
                 {getHeaderContent()}
               </div>
             </AccordionTrigger>
-            <AccordionContent>
-              <div className="px-4">
-                {text && (
+            {text && (
+              <AccordionContent>
+                <div className="px-4">
                   <div className="prose prose-sm max-w-none">
                     <div className="text-card-foreground">
                       <MemoizedMarkdown id={id} content={text} sources={sources} />
                     </div>
                   </div>
-                )}
-              </div>
-            </AccordionContent>
+                </div>
+              </AccordionContent>
+            )}
           </AccordionItem>
         </Accordion>
       </Card>

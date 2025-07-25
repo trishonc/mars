@@ -20,7 +20,7 @@ export function SubAgent({ id, title, toolCalls, state }: SubAgentProps) {
 
   return (
       <Card className="p-0 w-full">
-        <Accordion type="single" collapsible>
+        <Accordion type="single" collapsible value={state === 'streaming' && toolCalls.length > 0 ? id : undefined}>
           <AccordionItem value={id} className="border-none">
             <AccordionTrigger className="hover:no-underline px-4 py-3">
               <div className="flex items-center gap-3 w-full min-w-0">
@@ -43,34 +43,36 @@ export function SubAgent({ id, title, toolCalls, state }: SubAgentProps) {
                 </div>
               </div>
             </AccordionTrigger>
-            <AccordionContent>
-              <div className="px-4">
-                <div className="space-y-2">
-                  {toolCalls.map((toolCall, index) => {
-                    if (toolCall.toolName === 'web_search') {
-                      return (
-                        <WebSearch 
-                          key={toolCall.toolCallId}
-                          query={toolCall.input.query}
-                          results={toolCall.output.results || []}
-                          subAgentId={id}
-                          searchIndex={index}
-                        />
-                      );
-                    } else if (toolCall.toolName === 'web_fetch') {
-                      return (
-                        <WebFetch 
-                          key={toolCall.toolCallId}
-                          url={toolCall.input.url}
-                          title={toolCall.output.title || ''}
-                        />
-                      );
-                    }
-                    return null;
-                  })}
+            {toolCalls.length > 0 && (
+              <AccordionContent>
+                <div className="px-4">
+                  <div className="space-y-2">
+                    {toolCalls.map((toolCall, index) => {
+                      if (toolCall.toolName === 'web_search') {
+                        return (
+                          <WebSearch 
+                            key={toolCall.toolCallId}
+                            query={toolCall.input.query}
+                            results={toolCall.output.results || []}
+                            subAgentId={id}
+                            searchIndex={index}
+                          />
+                        );
+                      } else if (toolCall.toolName === 'web_fetch') {
+                        return (
+                          <WebFetch 
+                            key={toolCall.toolCallId}
+                            url={toolCall.input.url}
+                            title={toolCall.output.title || ''}
+                          />
+                        );
+                      }
+                      return null;
+                    })}
+                  </div>
                 </div>
-              </div>
-            </AccordionContent>
+              </AccordionContent>
+            )}
           </AccordionItem>
         </Accordion>
       </Card>

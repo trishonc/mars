@@ -54,24 +54,24 @@ export function Reasoning({ id, text, state }: ReasoningProps) {
   
   return (
       <Card className="p-0 w-full">
-        <Accordion type="single" collapsible>
+        <Accordion type="single" collapsible value={state === 'streaming' && text ? "reasoning" : undefined}>
           <AccordionItem value="reasoning" className="border-none">
             <AccordionTrigger className="hover:no-underline px-4 py-3">
               <div className="flex items-center gap-3 w-full min-w-0">
                 {getHeaderContent()}
               </div>
             </AccordionTrigger>
-            <AccordionContent>
-              <div className="px-4">
-                {text && (
-                    <div className="prose prose-sm max-w-none">
-                      <div className="text-card-foreground">
-                        <MemoizedMarkdown id={id} content={text} />
-                      </div>
+            {text && (
+              <AccordionContent>
+                <div className="px-4">
+                  <div className="prose prose-sm max-w-none">
+                    <div className="text-card-foreground">
+                      <MemoizedMarkdown id={id} content={text} />
+                    </div>
                   </div>
-                )}
-              </div>
-            </AccordionContent>
+                </div>
+              </AccordionContent>
+            )}
           </AccordionItem>
         </Accordion>
       </Card>

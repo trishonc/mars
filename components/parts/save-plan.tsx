@@ -67,24 +67,24 @@ export function SavePlan({ id, state, plan, errorText }: SavePlanProps) {
 
   return (
       <Card className="p-0 w-full">
-        <Accordion type="single" collapsible>
+        <Accordion type="single" collapsible value={state === 'input-streaming' && plan ? "plan" : undefined}>
           <AccordionItem value="plan" className="border-none">
             <AccordionTrigger className="hover:no-underline px-4 py-3">
               <div className="flex items-center gap-3 w-full min-w-0">
                 {getHeaderContent()}
               </div>
             </AccordionTrigger>
-            <AccordionContent>
-              <div className="px-4">
-                {plan && (
-                    <div className="prose prose-sm max-w-none">
-                      <div className="text-card-foreground">
-                        <MemoizedMarkdown id={id} content={plan} />
-                      </div>
+            {plan && (
+              <AccordionContent>
+                <div className="px-4">
+                  <div className="prose prose-sm max-w-none">
+                    <div className="text-card-foreground">
+                      <MemoizedMarkdown id={id} content={plan} />
+                    </div>
                   </div>
-                )}
-              </div>
-            </AccordionContent>
+                </div>
+              </AccordionContent>
+            )}
           </AccordionItem>
         </Accordion>
       </Card>

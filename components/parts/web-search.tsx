@@ -89,17 +89,15 @@ export function WebSearch({ query, results, subAgentId, searchIndex }: WebSearch
               </div>
             </div>
           </AccordionTrigger>
-          <AccordionContent>
-            <div className="px-0">
-              <div className="space-y-2">
-                {results.length > 0 ? (
-                  results.map((result: SearchResult<{}>, index: number) => renderSearchResult(result, index))
-                ) : (
-                  <div className="text-sm text-muted-foreground px-4 py-3">No results found</div>
-                )}
+          {results.length > 0 && (
+            <AccordionContent>
+              <div className="px-0">
+                <div className="space-y-2">
+                  {results.map((result: SearchResult<{}>, index: number) => renderSearchResult(result, index))}
+                </div>
               </div>
-            </div>
-          </AccordionContent>
+            </AccordionContent>
+          )}
         </AccordionItem>
       </Accordion>
     </Card>
