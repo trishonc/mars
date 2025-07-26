@@ -2,12 +2,13 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { MemoizedMarkdown } from '../markdown';
 import { Sparkles, FileText, FileCheck } from 'lucide-react';
+import { Source } from '@/ai/types';
 
 interface FinalReportProps {
   id: string;
   text?: string;    
-  sources?: any[];
-  phase?: string;
+  sources?: Source[];
+  phase?: 'synthesizing' | 'citations' | 'finished';
 }
 
 export function FinalReport({ id, text, sources, phase }: FinalReportProps) {
