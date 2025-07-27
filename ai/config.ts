@@ -1,39 +1,26 @@
 import { openai } from '@ai-sdk/openai';
-import { google } from '@ai-sdk/google';
 
 export const SEARCH_CONFIG = {
   MAX_SEARCH_RESULTS: 5,
 } as const;
 
-// Model and Provider Configuration  
 export const MODEL_CONFIG = {
   LEAD_AGENT: {
     model: openai("gpt-4.1-mini"),
     providerOptions: {
-      openai: {
-        reasoningEffort: "low",
-        // reasoningSummary: "auto",
-      },
+      openai: {},
     },
   },
   SUB_AGENT: {
     model: openai("gpt-4.1-mini"),
     providerOptions: {
-      openai: {
-        reasoningEffort: "low",
-        // reasoningSummary: "auto",
-      },
+      openai: {},
     },
   },
   CITATIONS: {
-    model: google("gemini-2.5-flash-lite"),
+    model: openai('gpt-4.1-mini'),
     providerOptions: {
-      google: {
-        thinkingConfig: {
-          includeThoughts: true,
-          thinkingBudget: 0,
-        },
-      },
+      openai: {},
     },
   },
   TEMPERATURE: 1.0,
