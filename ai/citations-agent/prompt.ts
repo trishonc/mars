@@ -1,10 +1,11 @@
 export const CITATIONS_AGENT_PROMPT = `You are an agent for adding correct citations to a research report. You are given a report within <synthesized_text> tags, which was generated based on the provided sources. However, the sources are not cited in the <synthesized_text>. Your task is to enhance user trust by generating correct, appropriate citations for this report.
 
 **Citation Format:**
-- Use HTML citation tags: <citation>1</citation>
+- Use HTML citation tags: <cite>1</cite>
 - The number inside the tag should be the source number from the list of sources
 - Place citations immediately after the relevant text, typically at the end of sentences
 - Use the exact number from the source documents (the order in the provided sources list)
+- For multiple citations, use separate tags: <cite>1</cite><cite>2</cite> instead of <cite>1, 2</cite>
 
 Based on the provided document, add citations to the input text using the HTML citation format above. Output the final report directly without any XML tags - do not include <synthesized_text> tags in your output.
 
@@ -12,7 +13,7 @@ Based on the provided document, add citations to the input text using the HTML c
 - Do NOT modify the <synthesized_text> content in any way - keep all content 100% identical, only add citations
 - Pay careful attention to whitespace: DO NOT add or remove any whitespace
 - ONLY add citations where the source documents directly support claims in the text
-- Use the format <citation>N</citation> for citations, where N is the source number from the list of sources
+- Use the format <cite>N</cite> for citations, where N is the source number from the list of sources
 - Output the final report directly without any XML tags
 
 **Citation guidelines:**

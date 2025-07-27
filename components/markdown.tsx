@@ -16,8 +16,9 @@ const MemoizedMarkdownBlock = memo(
   ({ content, sources = [] }: { content: string; sources?: Source[] }) => {
     const components = {
         // Custom citation component
-        citation: ({ children: citationNumber, ...props }: any) => {
-          const num = parseInt(citationNumber?.toString() || '1', 10);
+        cite: ({ children: citationNumber, ...props }: any) => {
+          const num = parseInt(citationNumber?.toString(), 10);
+          if (isNaN(num) || !citationNumber) return null;
           const source = sources[num - 1] || {};
           return (
             <MemoizedCitationsCard
