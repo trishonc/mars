@@ -19,10 +19,13 @@ export const webSearchTool = tool({
     try {
       console.log(`Executing search tool with query: "${query}"`);
 
-      const response: SearchResponse<{}> = await exa.search(query, { 
+      const response: SearchResponse<{}> = await exa.search(query, {
         numResults: SEARCH_CONFIG.MAX_SEARCH_RESULTS,
         type: 'keyword',
         useAutoprompt: true,
+        // startPublishedDate: '2025-01-01',
+        // endPublishedDate '2025-07-28',
+        // category: 'news',
       });
       
       const searchResults = response.results || [];
@@ -51,7 +54,7 @@ export const webFetchTool = tool({
   }),
   execute: async ({ url }) => {
     try {
-      const response: SearchResponse<{ text: true }> = await exa.getContents([url], { text: true });
+      const response: SearchResponse<{text: true}> = await exa.getContents([url], { text: true, livecrawl: 'preferred'});
       
       let content: string | null = null;
       let title: string | null = null;
