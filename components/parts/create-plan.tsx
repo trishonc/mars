@@ -10,7 +10,7 @@ interface SavePlanProps {
   errorText?: string;
 }
 
-export function SavePlan({ id, state, plan, errorText }: SavePlanProps) {
+export function CreatePlan({ id, state, plan, errorText }: SavePlanProps) {
   const getHeaderContent = () => {
     switch (state) {
       case 'input-streaming':
@@ -67,7 +67,7 @@ export function SavePlan({ id, state, plan, errorText }: SavePlanProps) {
 
   return (
       <Card className="p-0 w-full">
-        <Accordion type="single" collapsible value={state === 'input-streaming' && plan ? "plan" : undefined}>
+        <Accordion type="single" collapsible>
           <AccordionItem value="plan" className="border-none">
             <AccordionTrigger className="hover:no-underline px-4 py-3">
               <div className="flex items-center gap-3 w-full min-w-0">

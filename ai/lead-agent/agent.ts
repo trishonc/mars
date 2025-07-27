@@ -1,16 +1,17 @@
 import { streamText, UIMessage, convertToModelMessages, UIMessageStreamWriter, stepCountIs, hasToolCall, smoothStream} from 'ai';
-import { researchState } from '../research-state';
-import { completeTaskTool, savePlanTool, readPlanTool } from '../tools';
+import { completeTaskTool, createPlanTool } from '../tools';
 import { runSubAgentTool } from '../sub-agent/agent';
 import { LEAD_AGENT_PROMPT } from './prompt';
 import { MODEL_CONFIG, AGENT_CONFIG } from '../config';
+import { Source } from '../types';
 
 export async function runResearchAgent(messages: UIMessage[], writer: UIMessageStreamWriter, abortSignal?: AbortSignal) {
+  let allSources: Source[] = [];
+
   const tools = {
     run_subagent: runSubAgentTool(writer),
     complete_task: completeTaskTool,
-    save_plan: savePlanTool,
-    read_plan: readPlanTool,
+    create_plan: createPlanTool,
   };
   
   const leadAgentResult = await streamText({
@@ -32,7 +33,7 @@ export async function runResearchAgent(messages: UIMessage[], writer: UIMessageS
     prepareStep: async ({ stepNumber }) => {
       if (stepNumber === 0) {
         return {
-          toolChoice: { type: 'tool', toolName: 'save_plan' },
+          toolChoice: { type: 'tool', toolName: 'create_plan' },
         };
       }
       if (stepNumber === AGENT_CONFIG.LEAD_AGENT_MAX_STEPS - 1) {
@@ -53,7 +54,6 @@ export async function runResearchAgent(messages: UIMessage[], writer: UIMessageS
           id: 'data-report',
         });
       }
-        
     },
   });
 
@@ -63,13 +63,27 @@ export async function runResearchAgent(messages: UIMessage[], writer: UIMessageS
     sendFinish: false,
   }));
 
-  const leadToolCalls = await leadAgentResult.toolCalls;
-  const finalReportOutput = leadToolCalls.find((call) => call.toolName === 'complete_task')?.input;
   
-  if (!finalReportOutput?.report) {
-      return;
+  const leadToolCalls = (await leadAgentResult.steps).flatMap(step => step.toolCalls ?? []);
+  const leadToolResults = (await leadAgentResult.steps).flatMap(step => step.toolResults ?? []);
+  
+  const subagentResults = leadToolResults.filter((result) => result.toolName === 'run_subagent');
+  for (const subagentResult of subagentResults) {
+    if (subagentResult.output?.sources) {
+      const newSources = subagentResult.output.sources.filter(
+        (source: { url: string }) => !allSources.some(e => e.url === source.url)
+      );
+      allSources.push(...newSources);
+    }
   }
 
-  // Save final report to research state
-  researchState.report = finalReportOutput.report;  
+  const finalReportToolCall = leadToolCalls.find((call) => call.toolName === 'complete_task');
+  const report = finalReportToolCall?.input.report;
+
+  console.log(`Lead agent collected ${allSources.length} total sources from all subagents`);
+  
+  return {
+    sources: allSources,
+    report: report,
+  };
 } 

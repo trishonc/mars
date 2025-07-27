@@ -1,13 +1,18 @@
 import { smoothStream, streamText, UIMessageStreamWriter } from 'ai';
-import { researchState } from '../research-state';
 import { CITATIONS_AGENT_PROMPT } from './prompt';
 import { MODEL_CONFIG } from '../config';
+import { Source } from '../types';
 
-export async function runCitationsAgent(writer: UIMessageStreamWriter, abortSignal?: AbortSignal): Promise<void> {
-  console.log(`Total sources collected during research: ${researchState.sources.length}`);
+export async function runCitationsAgent(
+  sources: Source[],
+  report: string,
+  writer: UIMessageStreamWriter,
+  abortSignal?: AbortSignal
+): Promise<void> {
+  console.log(`Total sources collected during research: ${sources.length}`);
   
-  if (!researchState.report) {
-    console.error('No report found in research state');
+  if (!report) {
+    console.error('No report provided to citations agent');
     return;
   }
 
@@ -16,12 +21,14 @@ export async function runCitationsAgent(writer: UIMessageStreamWriter, abortSign
     type: 'data-report',
     data: {
       phase: 'citations',
-      sources: researchState.sources.map(({ url, title }) => ({ url, title })),
+      sources: sources.map(({ url, title }) => ({ url, title })),
     },
     id: 'data-report',
   });
 
   console.log('Adding citations...');
+  console.log(sources);
+  console.log(report);
 
   // Generate complete report with citations
   const citationsResult = await streamText({
@@ -30,11 +37,11 @@ export async function runCitationsAgent(writer: UIMessageStreamWriter, abortSign
     prompt: `Here is the synthesized text and sources collected during research:
 
     <synthesized_text>
-    ${researchState.report}
+    ${report}
     </synthesized_text>
 
     <sources>
-    ${researchState.sources.map((source, index) => 
+    ${sources.map((source, index) => 
       `[${index + 1}] ${source.title ? source.title + ' - ' : ''}${source.url}\n${source.content}`
     ).join('\n\n---\n\n')}
     </sources>
@@ -48,14 +55,14 @@ export async function runCitationsAgent(writer: UIMessageStreamWriter, abortSign
     ],
   });
 
-  let report = '';
+  let reportWithCitations = '';
 
   for await (const part of citationsResult.fullStream) {
     if (part.type === 'text') {
       writer.write({
         type: 'data-report',
         data: {
-          report: report += part.text,
+          report: reportWithCitations += part.text,
         },
         id: 'data-report',
       });

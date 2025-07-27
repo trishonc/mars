@@ -3,8 +3,7 @@
 import { cn } from "@/lib/utils";
 import { SubAgent } from './parts/sub-agent';
 import { Reasoning } from './parts/reasoning';
-import { SavePlan } from './parts/save-plan';
-import { ReadPlan } from './parts/read-plan';
+import { CreatePlan } from './parts/create-plan';
 import { FinalReport } from './parts/final-report';
 import { Text } from './parts/text';
 import { MyUIMessage } from '@/ai/types';
@@ -65,24 +64,13 @@ export function Message({ message, status }: MessageProps) {
                   phase={part.data.phase}
                 />
               );
-            case 'tool-save_plan':
+            case 'tool-create_plan':
               return (
-                <SavePlan 
+                <CreatePlan 
                   key={key}
                   id={key}
                   state={status === 'ready' ? 'done' : part.state}
                   plan={part.input?.plan}
-                  errorText={part.errorText}
-                />
-              );
-            case 'tool-read_plan':
-              return (
-                <ReadPlan 
-                  key={key}
-                  id={key}
-                  state={status === 'ready' ? 'done' : part.state}
-                  plan={part.output?.plan || ''}
-                  output={part.output?.message}
                   errorText={part.errorText}
                 />
               );

@@ -1,6 +1,5 @@
 import { runResearchAgent } from '@/ai/lead-agent/agent';
 import { runCitationsAgent } from '@/ai/citations-agent/agent';
-import { initResearchState } from '@/ai/research-state';
 import { createUIMessageStream, createUIMessageStreamResponse } from 'ai';
 import { MyUIMessage } from '@/ai/types';
 
@@ -10,16 +9,19 @@ export async function POST(req: Request) {
 
   const stream = createUIMessageStream<MyUIMessage>({
     async execute({ writer }) {
-      initResearchState();
-      
       writer.write({ type: 'start' });
       
       try {
-        // Step 1: Run the research agent
-        await runResearchAgent(messages, writer, abortSignal);
+        // Step 1: Run the research agent and collect sources and report
+        const researchResult = await runResearchAgent(messages, writer, abortSignal);
         
-        // Step 2: Run the citations agent
-        await runCitationsAgent(writer, abortSignal);
+        // Step 2: Run the citations agent with collected data
+        if (researchResult?.report && researchResult?.sources) {
+          await runCitationsAgent(researchResult.sources, researchResult.report, writer, abortSignal);
+        } else {
+          console.error('Research agent did not return sources and report');
+          writer.write({ type: 'error', errorText: 'Research completed but no report was generated' });
+        }
       } catch (e) {
         writer.write({ type: 'error', errorText: (e as Error).message });
       } finally {

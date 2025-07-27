@@ -1,11 +1,10 @@
-import { webSearchTool, webFetchTool, savePlanTool, readPlanTool, completeTaskTool } from './tools';
+import { webSearchTool, webFetchTool, createPlanTool, completeTaskTool } from './tools';
 import { InferToolOutput, InferToolInput, InferUITools, UIMessage } from 'ai';
 
 const tools = {
   web_search: webSearchTool,
   web_fetch: webFetchTool,
-  save_plan: savePlanTool,
-  read_plan: readPlanTool,
+  create_plan: createPlanTool,
   complete_task: completeTaskTool,
 }
 
@@ -16,13 +15,6 @@ export interface Source {
   title?: string;
   content?: string;
 }
-
-export interface ResearchState {
-  sources: Source[];
-  plan: string | null;
-  report: string | null;
-}
-
 
 export type WebSearchTool = {
   toolName: 'web_search';
