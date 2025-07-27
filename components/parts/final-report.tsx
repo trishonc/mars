@@ -1,4 +1,4 @@
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { MemoizedMarkdown } from '../markdown';
 import { Sparkles, FileText, FileCheck } from 'lucide-react';

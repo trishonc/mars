@@ -19,7 +19,7 @@ export const webSearchTool = tool({
     try {
       console.log(`Executing search tool with query: "${query}"`);
 
-      const response: SearchResponse<{}> = await exa.search(query, {
+      const response= await exa.search(query, {
         numResults: SEARCH_CONFIG.MAX_SEARCH_RESULTS,
         type: 'keyword',
         useAutoprompt: true,
@@ -54,7 +54,7 @@ export const webFetchTool = tool({
   }),
   execute: async ({ url }) => {
     try {
-      const response: SearchResponse<{text: true}> = await exa.getContents([url], { text: true, livecrawl: 'preferred'});
+      const response = await exa.getContents([url], { text: true, livecrawl: 'preferred'});
       
       let content: string | null = null;
       let title: string | null = null;

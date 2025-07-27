@@ -27,9 +27,6 @@ export async function runCitationsAgent(
   });
 
   console.log('Adding citations...');
-  console.log(sources);
-  console.log(report);
-
   // Generate complete report with citations
   const citationsResult = await streamText({
     model: MODEL_CONFIG.CITATIONS.model,
@@ -53,6 +50,9 @@ export async function runCitationsAgent(
     experimental_transform: [
       smoothStream({ chunking: /.{1}/g }),
     ],
+    onError(error) {
+      console.error(error);
+    },
   });
 
   let reportWithCitations = '';

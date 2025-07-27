@@ -55,6 +55,9 @@ export async function runResearchAgent(messages: UIMessage[], writer: UIMessageS
         });
       }
     },
+    onError(error) {
+      console.error(error);
+    },
   });
 
   writer.merge(leadAgentResult.toUIMessageStream({

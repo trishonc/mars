@@ -65,6 +65,9 @@ export const runSubAgentTool = (writer: UIMessageStreamWriter) => tool({
           }
         },
         experimental_transform: smoothStream({ chunking: /.{1}/g }),
+        onError(error) {
+          console.error(error);
+        },
       });
 
       let toolCalls: SubAgentToolCall[] = [];
