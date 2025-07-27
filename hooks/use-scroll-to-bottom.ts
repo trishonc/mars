@@ -1,13 +1,31 @@
-import { useCallback, useRef } from "react";
+import { useEffect, useRef, type RefObject } from 'react';
 
-export function useScrollToBottom<T extends HTMLElement>() {
-  const containerRef = useRef<T>(null);
+export function useScrollToBottom(): [
+  RefObject<HTMLDivElement | null>,
+  RefObject<HTMLDivElement | null>,
+] {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const endRef = useRef<HTMLDivElement>(null);
 
-  const scrollToBottom = useCallback(() => {
-    if (containerRef.current) {
-      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+  useEffect(() => {
+    const container = containerRef.current;
+    const end = endRef.current;
+
+    if (container && end) {
+      const observer = new MutationObserver(() => {
+        end.scrollIntoView({ behavior: 'instant', block: 'end' });
+      });
+
+      observer.observe(container, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        characterData: true,
+      });
+
+      return () => observer.disconnect();
     }
   }, []);
 
-  return { containerRef, scrollToBottom };
+  return [containerRef, endRef];
 }

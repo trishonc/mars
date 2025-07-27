@@ -11,7 +11,7 @@ interface MessagesProps {
 }
 
 export function Messages({ messages, status }: MessagesProps) {
-  const { containerRef, scrollToBottom } = useScrollToBottom<HTMLDivElement>();
+  const [containerRef, endRef] = useScrollToBottom();
 
   return (
     <div ref={containerRef} className="flex flex-col flex-1 w-full items-center">
@@ -22,6 +22,8 @@ export function Messages({ messages, status }: MessagesProps) {
       {(status === 'submitted') && messages.length > 0 && messages[messages.length - 1].role === 'user' && (
         <LoadingDots />
       )}
+      {/* Invisible element at the bottom for scroll target */}
+      <div ref={endRef} />
     </div>
   );
 }
