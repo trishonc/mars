@@ -54,7 +54,7 @@ export function Reasoning({ id, text, state }: ReasoningProps) {
   
   return (
       <Card className="p-0 w-full">
-        <Accordion type="single" collapsible value={state === 'streaming' && text ? "reasoning" : undefined}>
+        <Accordion type="single" collapsible>
           <AccordionItem value="reasoning" className="border-none">
             <AccordionTrigger className="hover:no-underline px-4 py-3">
               <div className="flex items-center gap-3 w-full min-w-0">

@@ -40,7 +40,7 @@ export function FinalReport({ id, text, sources, phase }: FinalReportProps) {
 
   return (
       <Card className="p-0 w-full">
-        <Accordion type="single" collapsible value={text ? "final-report" : undefined}>
+        <Accordion type="single" collapsible>
           <AccordionItem value="final-report" className="border-none">
             <AccordionTrigger className="hover:no-underline px-4 py-3">
               <div className="flex items-center gap-3 w-full min-w-0">

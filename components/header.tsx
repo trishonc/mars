@@ -5,7 +5,7 @@ export function Header() {
     <header className="h-14 bg-background border-border">
       <div className="h-full px-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-foreground">
-          Deep Research
+          Mars
         </h1>
         <ThemeToggleButton />
       </div>

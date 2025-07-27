@@ -20,7 +20,7 @@ export function SubAgent({ id, title, toolCalls, state }: SubAgentProps) {
 
   return (
       <Card className="p-0 w-full">
-        <Accordion type="single" collapsible value={state === 'streaming' && toolCalls.length > 0 ? id : undefined}>
+        <Accordion type="single" collapsible>
           <AccordionItem value={id} className="border-none">
             <AccordionTrigger className="hover:no-underline px-4 py-3">
               <div className="flex items-center gap-3 w-full min-w-0">
