@@ -1,36 +1,89 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Mars - Multi-Agent Research System
 
-## Getting Started
+An open-source implementation of a multi-agent research system inspired by [Claude's Research feature](https://www.anthropic.com/engineering/built-multi-agent-research-system).
 
-First, run the development server:
+## 🚀 Features
 
+- **Multi-Agent Architecture**: Lead agent orchestrates specialized sub-agents for parallel research
+- **Real-time Streaming**: Live updates as agents work through research tasks
+- **Web Search Integration**: Powered by Exa AI for intelligent web search capabilities
+- **Inline Citations**: Citations in the final research report for transparency
+
+## 🛠️ Tech Stack
+
+- **Framework**: [Next.js 15](https://nextjs.org/) with App Router
+- **UI Components**: [ShadCN UI](https://ui.shadcn.com/) for modern UI Components powered by [Tailwind CSS](https://tailwindcss.com) with Claude theme from [TweakCN](https://https://tweakcn.com/)
+- **Runtime**: [Bun](https://bun.sh/) for fast JavaScript runtime
+- **AI Integration**: [Vercel AI SDK 5](https://sdk.vercel.ai/) for OpenAI LLM integration and streaming via custom data parts
+- **Web Search**: [Exa AI](https://exa.ai/) for intelligent web search capabilities
+
+## 🏗️ Architecture
+
+This project implements the orchestrator-worker pattern described in Anthropic's research:
+
+1. **Lead Agent**: Creates a plan based on the user's query and spawns one or many focused subagents in parralel
+2. **Sub-Agents**: Specialized agents that research the web based on their task
+3. **Citation Agent**: Adds inline citations in the final report
+4. **Real-time Streaming**: Live updates in the chat UI as agents work through tasks
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Bun](https://bun.sh/) installed on your system
+- OpenAI API key
+- Exa AI API key
+
+### Installation
+
+1. Clone the repository:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
+git clone <repository-url>
+cd mars
+```
+
+2. Install dependencies:
+```bash
+bun install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+
+Add your API keys to `.env.local`:
+```env
+OPENAI_API_KEY=your_openai_api_key
+EXA_API_KEY=your_exa_api_key
+```
+
+4. Run the development server:
+```bash
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 📖 Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Enter your research query in the chat interface
+2. The lead agent will analyze your request and create a research plan
+3. Sub-agents will be spawned to explore different aspects in parallel
+4. Watch real-time updates as agents work through the research
+5. Receive a comprehensive report with proper citations
 
-## Learn More
+## 📝 Notes
 
-To learn more about Next.js, take a look at the following resources:
+This project serves as a great reference implementation for several advanced AI agent patterns using AI SDK 5:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Parallel Agent UI Updates**: Real-time streaming updates for multiple agents working simultaneously, with individual progress tracking and state management
+- **Custom Citation Streaming**: Inline citation markers that are streamed in real-time and rendered directly in the UI as they're generated
+- **Multi-Agent Coordination**: Demonstrates how to orchestrate multiple specialized agents with proper result aggregation
+- **Custom Data Parts**: Shows how to implement custom streaming data types for complex UI state management
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ⚠️ Disclaimers
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Rough Implementation**: This is a rough proof-of-concept implementation and it is not intended for production use
+- **Tool Call Streaming Limitations**: Tool call input streaming does not work with all model providers so the plan creation may be generated in once instead of streamed for example
+- **OpenAI Reasoning**: To get reasoning streams with OpenAI models you must be ID card verified.
