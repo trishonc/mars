@@ -40,7 +40,7 @@ export function CitationsCard({ citationNumber, url, title }: CitationsCardProps
                 <img 
                   src={getFaviconUrl(url) || ''} 
                   alt=""
-                  className="w-3 h-3 flex-shrink-0"
+                  className="size-3 flex-shrink-0"
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
                   }}
@@ -54,7 +54,7 @@ export function CitationsCard({ citationNumber, url, title }: CitationsCardProps
               rel="noopener noreferrer"
               className="flex-shrink-0 p-1 hover:bg-muted rounded"
             >
-              <ExternalLink className="h-3 w-3" />
+              <ExternalLink className="size-3" />
             </Link>
           </div>
         </div>

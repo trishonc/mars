@@ -44,13 +44,13 @@ export function InputBox({ input, handleSubmit, onChange, inputRef, status, onSt
         type={isProcessing ? "button" : "submit"}
         size='icon'
         onClick={isProcessing ? handleButtonClick : undefined}
-        className="absolute right-1.5 top-1/2 -translate-y-1/2 w-8 h-8 hover:bg-muted"
+        className="absolute right-1.5 top-1/2 -translate-y-1/2 size-8 hover:bg-muted"
         variant='ghost'
         aria-label={isProcessing ? "Stop generation" : "Send message"}
       >
         <FontAwesomeIcon 
           icon={isProcessing ? faStop : faPaperPlane} 
-          className="h-4 w-4" 
+          className="size-4" 
         />
       </Button>
     </form>

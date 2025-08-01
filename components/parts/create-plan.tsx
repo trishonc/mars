@@ -16,35 +16,35 @@ export function CreatePlan({ id, state, plan, errorText }: SavePlanProps) {
       case 'input-streaming':
         return (
           <>
-            <Clock className="w-4 h-4 text-muted-foreground flex-shrink-0 animate-spin" />
+            <Clock className="size-4 text-muted-foreground flex-shrink-0 animate-spin" />
             <span className="text-sm">Planning...</span>
           </>
         );
       case 'input-available':
         return (
           <>
-            <FileText className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+            <FileText className="size-4 text-muted-foreground flex-shrink-0" />
             <span className="text-sm">Research Plan</span>
           </>
         );
       case 'output-available':
         return (
           <>
-            <FileText className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+            <FileText className="size-4 text-muted-foreground flex-shrink-0" />
             <span className="text-sm">Research Plan</span>
           </>
         );
       case 'output-error':
         return (
           <>
-            <Bot className="w-4 h-4 text-red-600 flex-shrink-0" />
+            <Bot className="size-4 text-red-600 flex-shrink-0" />
             <span className="text-sm text-red-700">Error saving plan</span>
           </>
         );
       default:
         return (
           <>
-            <FileText className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+            <FileText className="size-4 text-muted-foreground flex-shrink-0" />
             <span className="text-sm">Research Plan</span>
           </>
         );
@@ -56,7 +56,7 @@ export function CreatePlan({ id, state, plan, errorText }: SavePlanProps) {
         <Card className="p-0 w-full border-red-200 bg-red-50">
           <CardContent className="py-4">
             <div className="flex items-center gap-2">
-              <Bot className="h-4 w-4 text-red-600" />
+              <Bot className="size-4 text-red-600" />
               <span className="text-red-700 font-medium">Error saving plan:</span>
             </div>
             <div className="text-red-600 text-sm mt-1">{errorText || 'An unknown error occurred'}</div>

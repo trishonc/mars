@@ -22,12 +22,12 @@ export function WebSearch({ query, results, subAgentId, searchIndex }: WebSearch
       <Card key={index} className="hover:bg-secondary/20 transition-colors p-0 mx-2">
         <CardContent className="px-4 py-3">
           <div className="flex items-center gap-2">
-            <div className="w-4 h-4 flex items-center justify-center flex-shrink-0">
+            <div className="size-4 flex items-center justify-center flex-shrink-0">
               {faviconUrl && (
                 <img 
                   src={faviconUrl} 
                   alt="favicon" 
-                  className="w-4 h-4" 
+                  className="size-4" 
                   onError={(e) => {
                     e.currentTarget.style.display = 'none';
                     const nextElement = e.currentTarget.nextElementSibling as HTMLElement;
@@ -38,7 +38,7 @@ export function WebSearch({ query, results, subAgentId, searchIndex }: WebSearch
                 />
               )}
               <Link 
-                className="w-4 h-4 text-muted-foreground"
+                className="size-4 text-muted-foreground"
                 style={{ display: faviconUrl ? 'none' : 'block' }}
               />
             </div>
@@ -76,7 +76,7 @@ export function WebSearch({ query, results, subAgentId, searchIndex }: WebSearch
         <AccordionItem value={searchKey} className="border-none">
           <AccordionTrigger className="hover:no-underline px-4 py-3">
             <div className="flex items-center gap-3 w-full min-w-0">
-              <Globe className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+              <Globe className="size-4 text-muted-foreground flex-shrink-0" />
               <div className="flex-1 text-left min-w-0">
                 <span className="text-sm break-words">{query || 'Unknown query'}</span>
               </div>

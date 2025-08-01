@@ -31,21 +31,21 @@ export function Reasoning({ id, text, state }: ReasoningProps) {
     if (state === 'streaming') {
       return (
         <>
-          <Clock className="w-4 h-4 text-muted-foreground flex-shrink-0 animate-spin" />
+          <Clock className="size-4 text-muted-foreground flex-shrink-0 animate-spin" />
           <span className="text-sm">Thinking...</span>
         </>
       );
     } else if (state === 'done' && duration !== null) {
       return (
         <>
-          <Brain className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+          <Brain className="size-4 text-muted-foreground flex-shrink-0" />
           <span className="text-sm">Thought for {duration} second{duration !== 1 ? 's' : ''}</span>
         </>
       );
     } else {
       return (
         <>
-          <Brain className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+          <Brain className="size-4 text-muted-foreground flex-shrink-0" />
           <span className="text-sm">Thinking...</span>
         </>
       );

@@ -17,21 +17,21 @@ export function FinalReport({ id, text, sources, phase }: FinalReportProps) {
       case 'synthesizing':
         return (
           <>
-            <Sparkles className="w-4 h-4 text-muted-foreground flex-shrink-0 animate-pulse" />
+            <Sparkles className="size-4 text-muted-foreground flex-shrink-0 animate-pulse" />
             <span className="text-sm">Synthesizing...</span>
           </>
         );
       case 'citations':
         return (
           <>
-            <FileText className="w-4 h-4 text-muted-foreground flex-shrink-0 animate-pulse" />
+            <FileText className="size-4 text-muted-foreground flex-shrink-0 animate-pulse" />
             <span className="text-sm">Generating report...</span>
           </>
         );
       case 'finished':
         return (
           <>
-            <FileCheck className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+            <FileCheck className="size-4 text-muted-foreground flex-shrink-0" />
             <span className="text-sm">Final Report</span>
           </>
         );

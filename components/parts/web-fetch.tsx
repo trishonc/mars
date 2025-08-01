@@ -18,7 +18,7 @@ export function WebFetch({ url, title }: WebFetchProps) {
     <Card className="hover:bg-secondary/20 transition-colors p-0">
       <CardContent className="px-4 py-3">
         <div className="flex items-center gap-3">
-          <Eye className="w-4 h-4 text-muted-foreground flex-shrink-0" />
+          <Eye className="size-4 text-muted-foreground flex-shrink-0" />
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between gap-12">
               <a 
@@ -34,7 +34,7 @@ export function WebFetch({ url, title }: WebFetchProps) {
                   <img 
                     src={faviconUrl} 
                     alt="favicon" 
-                    className="w-4 h-4" 
+                    className="size-4" 
                     onError={(e) => {
                       e.currentTarget.style.display = 'none';
                     }}

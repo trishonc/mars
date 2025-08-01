@@ -12,7 +12,7 @@ function ThemeToggleButton() {
     <Button
       variant="ghost"
       size="icon"
-      className="h-8 w-8"
+      className="size-8"
       onClick={() => setTheme(theme === "light" ? "dark" : "light")}
     >
       <Sun className="hidden dark:block" />
