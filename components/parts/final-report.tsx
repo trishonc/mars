@@ -18,7 +18,7 @@ export function FinalReport({ id, text, sources, phase }: FinalReportProps) {
         return (
           <>
             <Sparkles className="w-4 h-4 text-muted-foreground flex-shrink-0 animate-pulse" />
-            <span className="text-sm">Synthesizing results...</span>
+            <span className="text-sm">Synthesizing...</span>
           </>
         );
       case 'citations':

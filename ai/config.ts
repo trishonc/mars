@@ -29,5 +29,5 @@ export const MODEL_CONFIG = {
 
 export const AGENT_CONFIG = {
   LEAD_AGENT_MAX_STEPS: 3,
-  SUBAGENT_MAX_STEPS: 3,
+  SUB_AGENT_MAX_STEPS: 3,
 } as const;

@@ -54,11 +54,11 @@ export const runSubAgentTool = (writer: UIMessageStreamWriter) => tool({
         maxOutputTokens: MODEL_CONFIG.MAX_OUTPUT_TOKENS,
         providerOptions: MODEL_CONFIG.SUB_AGENT.providerOptions,
         stopWhen: [
-          stepCountIs(AGENT_CONFIG.SUBAGENT_MAX_STEPS),
+          stepCountIs(AGENT_CONFIG.SUB_AGENT_MAX_STEPS),
           hasToolCall('complete_task'),
         ],
         prepareStep: async ({ stepNumber }) => {
-          if (stepNumber === AGENT_CONFIG.SUBAGENT_MAX_STEPS - 1) {
+          if (stepNumber === AGENT_CONFIG.SUB_AGENT_MAX_STEPS - 1) {
             return {
               toolChoice: { type: 'tool', toolName: 'complete_task' },
             };
