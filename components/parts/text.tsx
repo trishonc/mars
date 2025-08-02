@@ -5,14 +5,14 @@ import { Card, CardContent } from '@/components/ui/card';
 
 interface TextProps {
   id: string;
-  content: string;
+  text: string;
 }
 
-export function Text({ id, content }: TextProps) {
+export function Text({ id, text }: TextProps) {
   return (
       <Card className="p-0 w-fit">
         <CardContent className="px-4 py-3">
-          <MemoizedMarkdown id={id} content={content} />
+          <MemoizedMarkdown id={id} content={text} />
         </CardContent>
       </Card>
   );

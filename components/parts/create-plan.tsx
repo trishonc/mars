@@ -3,14 +3,14 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { MemoizedMarkdown } from '../markdown';
 import { Bot, Clock, FileText } from 'lucide-react';
 
-interface SavePlanProps {
+interface CreatePlanProps {
   id: string;
-  state: string;
+  state: 'input-streaming' | 'input-available' | 'output-available' | 'output-error';
   plan?: string;   
   errorText?: string;
 }
 
-export function CreatePlan({ id, state, plan, errorText }: SavePlanProps) {
+export function CreatePlan({ id, state, plan, errorText }: CreatePlanProps) {
   const getHeaderContent = () => {
     switch (state) {
       case 'input-streaming':

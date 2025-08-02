@@ -6,9 +6,9 @@ import { Source } from '@/ai/types';
 
 interface FinalReportProps {
   id: string;
-  text?: string;    
-  sources?: Source[];
-  phase?: 'synthesizing' | 'citations' | 'finished';
+  text: string;    
+  sources: Source[];
+  phase: 'synthesizing' | 'citations' | 'finished';
 }
 
 export function FinalReport({ id, text, sources, phase }: FinalReportProps) {

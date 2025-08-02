@@ -8,7 +8,7 @@ import { getFaviconUrl } from '@/lib/utils';
 import { SearchResult } from 'exa-js';
 
 interface WebSearchProps {
-  query?: string;
+  query: string;
   results: SearchResult<{}>[];
   subAgentId: string;
   searchIndex: number;

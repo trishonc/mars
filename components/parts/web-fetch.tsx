@@ -7,7 +7,7 @@ import { getFaviconUrl } from '@/lib/utils';
 
 interface WebFetchProps {
   url: string;
-  title?: string;
+  title: string;
 }
 
 export function WebFetch({ url, title }: WebFetchProps) {
@@ -27,7 +27,7 @@ export function WebFetch({ url, title }: WebFetchProps) {
                 rel="noopener noreferrer" 
                 className="text-sm hover:no-underline truncate flex-1"
               >
-                Read <span className="text-muted-foreground">{title || hostname}</span>
+                Read <span className="text-muted-foreground">{title}</span>
               </a>
               <div className="flex items-center gap-2 flex-shrink-0">
               {faviconUrl && (

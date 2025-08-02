@@ -32,7 +32,7 @@ export function Message({ message, status }: MessageProps) {
                 <Text
                   key={key}
                   id={key}
-                  content={part.text}
+                  text={part.text}
                 />
               );
             case 'reasoning':
@@ -69,7 +69,7 @@ export function Message({ message, status }: MessageProps) {
                 <CreatePlan 
                   key={key}
                   id={key}
-                  state={status === 'ready' ? 'done' : part.state}
+                  state={status === 'ready' ? 'input-available' : part.state}
                   plan={part.input?.plan}
                   errorText={part.errorText}
                 />

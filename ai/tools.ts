@@ -1,6 +1,6 @@
 import { tool } from 'ai';
 import { z } from 'zod';
-import Exa, { SearchResponse } from 'exa-js';
+import Exa from 'exa-js';
 import { SEARCH_CONFIG } from './config';
 
 const exa = new Exa(process.env.EXA_API_KEY);
@@ -61,8 +61,8 @@ export const webFetchTool = tool({
 
       if (response.results && response.results.length > 0) {
         const result = response.results[0];
-        content = result.text || null;
-        title = result.title || null;
+        content = result.text;
+        title = result.title;
       }
 
       if (content) {
