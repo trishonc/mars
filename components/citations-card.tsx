@@ -1,6 +1,5 @@
 "use client";
 
-import { memo } from "react";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { Button } from "@/components/ui/button";
 import { ExternalLink } from "lucide-react";
@@ -37,31 +36,27 @@ export function CitationsCard({ citationNumber, url, title }: CitationsCardProps
                 {title}
               </p>
               <p className="text-xs text-muted-foreground flex items-center gap-1.5 mt-1">
-                <img 
-                  src={getFaviconUrl(url) || ''} 
+                <img
+                  src={getFaviconUrl(url) || ''}
                   alt=""
                   className="size-3 flex-shrink-0"
                   onError={(e) => {
                     (e.target as HTMLImageElement).style.display = 'none';
                   }}
                 />
-                <span className="truncate">{url}</span>
+                <Link
+                  href={url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="truncate text-primary hover:underline"
+                >
+                  {url}
+                </Link>
               </p>
             </div>
-            <Link
-              href={url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-shrink-0 p-1 hover:bg-muted rounded"
-            >
-              <ExternalLink className="size-3" />
-            </Link>
           </div>
         </div>
       </HoverCardContent>
     </HoverCard>
   );
-} 
-
-export const MemoizedCitationsCard = memo(CitationsCard);
-MemoizedCitationsCard.displayName = "MemoizedCitationsCard"; 
+}

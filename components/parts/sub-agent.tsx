@@ -11,12 +11,12 @@ import { SubAgentToolCall } from '@/ai/types';
 interface SubAgentProps {
   id: string;
   title: string;
-  toolCalls: SubAgentToolCall[];
+  toolCalls?: SubAgentToolCall[];
   state: 'streaming' | 'done';
 }
 
 export function SubAgent({ id, title, toolCalls, state }: SubAgentProps) {
-  const sourceCount = toolCalls.filter(call => call.toolName === 'web_fetch').length;
+  const sourceCount = toolCalls?.filter(call => call.toolName === 'web_fetch').length || 0;
 
   return (
       <Card className="p-0 w-full">
@@ -43,7 +43,7 @@ export function SubAgent({ id, title, toolCalls, state }: SubAgentProps) {
                 </div>
               </div>
             </AccordionTrigger>
-            {toolCalls.length > 0 && (
+            {toolCalls && toolCalls.length > 0 && (
               <AccordionContent>
                 <div className="px-4">
                   <div className="space-y-2">

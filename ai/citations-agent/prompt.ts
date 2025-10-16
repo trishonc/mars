@@ -6,6 +6,8 @@ export const CITATIONS_AGENT_PROMPT = `You are an agent for adding correct citat
 - Place citations immediately after the relevant text, typically at the end of sentences
 - Use the exact number from the source documents (the order in the provided sources list)
 - For multiple citations, use separate tags: <cite>1</cite><cite>2</cite> instead of <cite>1, 2</cite>
+- If the source number is not found in the list of sources, do not add a citation
+- Do not add empty citations like <cite></cite>
 
 Based on the provided document, add citations to the input text using the HTML citation format above. Output the final report directly without any XML tags - do not include <synthesized_text> tags in your output.
 
