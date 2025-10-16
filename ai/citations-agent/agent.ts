@@ -1,12 +1,12 @@
 import { smoothStream, streamText, UIMessageStreamWriter } from 'ai';
 import { CITATIONS_AGENT_PROMPT } from './prompt';
 import { MODEL_CONFIG } from '../config';
-import { Source } from '../types';
+import { Source, MyUIMessage } from '../types';
 
 export async function runCitationsAgent(
   sources: Source[],
   report: string,
-  writer: UIMessageStreamWriter,
+  writer: UIMessageStreamWriter<MyUIMessage>,
   abortSignal?: AbortSignal
 ): Promise<void> {
   console.log(`Total sources collected during research: ${sources.length}`);
@@ -21,6 +21,7 @@ export async function runCitationsAgent(
     type: 'data-report',
     data: {
       phase: 'citations',
+      report: '',
       sources: sources.map(({ url, title }) => ({ url, title })),
     },
     id: 'data-report',
@@ -58,22 +59,25 @@ export async function runCitationsAgent(
   let reportWithCitations = '';
 
   for await (const part of citationsResult.fullStream) {
-    if (part.type === 'text') {
+    if (part.type === 'text-delta') {
       writer.write({
         type: 'data-report',
         data: {
+          phase: 'citations',
           report: reportWithCitations += part.text,
+          sources: sources.map(({ url, title }) => ({ url, title })),
         },
         id: 'data-report',
       });
     }
   }
 
-  // Final report complete
   writer.write({
     type: 'data-report',
     data: {
       phase: 'finished',
+      report: reportWithCitations,
+      sources: sources.map(({ url, title }) => ({ url, title })),
     },
     id: 'data-report',
   });

@@ -1,11 +1,11 @@
-import { tool, streamText, UIMessageStreamWriter, stepCountIs, hasToolCall, smoothStream} from 'ai';
+import { tool, streamText, UIMessageStreamWriter, stepCountIs, hasToolCall, smoothStream, InferToolInput} from 'ai';
 import { z } from 'zod';
 import { webSearchTool, webFetchTool, completeTaskTool } from '../tools';
 import { SUB_AGENT_PROMPT } from './prompt';
 import { MODEL_CONFIG, AGENT_CONFIG } from '../config';
-import { WebSearchTool, WebFetchTool, SubAgentToolCall, Source } from '../types';
+import { Source, MyUIMessage, SubAgentToolCall } from '../types';
 
-export const runSubAgentTool = (writer: UIMessageStreamWriter) => tool({
+export const runSubAgentTool = (writer: UIMessageStreamWriter<MyUIMessage>) => tool({
   description:
     'Spawn a subagent to research a subtopic. Use this to research a subtopic in depth with specific instructions.',
   inputSchema: z.object({
@@ -74,15 +74,14 @@ export const runSubAgentTool = (writer: UIMessageStreamWriter) => tool({
       
       for await (const part of subagentResult.fullStream) {
         if (part.type === 'tool-result') {
-          const { toolCallId, toolName, input, output } = part;
+          const { toolCallId, toolName, input, output } = part as SubAgentToolCall;
           
           if (toolName === 'web_search') {
-            toolCalls.push({ toolCallId, toolName, input, output } as WebSearchTool);
+            toolCalls.push({ toolCallId, toolName, input, output});
           } else if (toolName === 'web_fetch') {
-            toolCalls.push({ toolCallId, toolName, input, output } as WebFetchTool);
+            toolCalls.push({ toolCallId, toolName, input, output});
             
-            // Collect sources from web_fetch tool calls
-            if (output && output.content && output.content !== null) {
+            if (output && output.content) {
               sources.push({
                 url: input.url,
                 content: output.content,
@@ -102,11 +101,13 @@ export const runSubAgentTool = (writer: UIMessageStreamWriter) => tool({
           });
         }
         if (part.type === 'tool-call' && part.toolName === 'complete_task') {
+          const input = part.input as InferToolInput<typeof completeTaskTool>;
           writer.write({ 
             type: 'data-subagent',
             data: {
-              title: part.input.title,
+              title: input.title,
               state: 'done',
+              toolCalls: [...toolCalls],
             },
             id: subAgentId,
           });

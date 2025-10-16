@@ -1,11 +1,11 @@
-import { streamText, UIMessage, convertToModelMessages, UIMessageStreamWriter, stepCountIs, hasToolCall, smoothStream} from 'ai';
+import { streamText, convertToModelMessages, UIMessageStreamWriter, stepCountIs, hasToolCall, smoothStream, InferToolOutput, InferToolInput} from 'ai';
 import { completeTaskTool, createPlanTool } from '../tools';
 import { runSubAgentTool } from '../sub-agent/agent';
 import { LEAD_AGENT_PROMPT } from './prompt';
 import { MODEL_CONFIG, AGENT_CONFIG } from '../config';
-import { Source } from '../types';
+import { Source, MyUIMessage } from '../types';
 
-export async function runResearchAgent(messages: UIMessage[], writer: UIMessageStreamWriter, abortSignal?: AbortSignal) {
+export async function runResearchAgent(messages: MyUIMessage[], writer: UIMessageStreamWriter<MyUIMessage>, abortSignal?: AbortSignal) {
   let allSources: Source[] = [];
 
   const tools = {
@@ -67,21 +67,27 @@ export async function runResearchAgent(messages: UIMessage[], writer: UIMessageS
   }));
 
   
-  const leadToolCalls = (await leadAgentResult.steps).flatMap(step => step.toolCalls ?? []);
-  const leadToolResults = (await leadAgentResult.steps).flatMap(step => step.toolResults ?? []);
-  
-  const subagentResults = leadToolResults.filter((result) => result.toolName === 'run_subagent');
-  for (const subagentResult of subagentResults) {
-    if (subagentResult.output?.sources) {
-      const newSources = subagentResult.output.sources.filter(
-        (source: { url: string }) => !allSources.some(e => e.url === source.url)
-      );
-      allSources.push(...newSources);
-    }
+  const steps = await leadAgentResult.steps;
+  const leadToolCalls = steps.flatMap(s => s.toolCalls ?? []);
+  const leadToolResults = steps.flatMap(s => s.toolResults ?? []);
+
+    
+  const subagentOutputs = leadToolResults
+  .filter((result) => result.toolName === 'run_subagent' && result.output)
+  .map((result) => result.output as InferToolOutput<typeof tools.run_subagent>);
+
+  for (const output of subagentOutputs) {
+    const newSources = output.sources.filter(
+      (source) => !allSources.some(e => e.url === source.url)
+    );
+    allSources.push(...newSources);
   }
 
-  const finalReportToolCall = leadToolCalls.find((call) => call.toolName === 'complete_task');
-  const report = finalReportToolCall?.input.report;
+  const completeTaskInput = leadToolCalls
+  .find((call) => call.toolName === 'complete_task')
+  ?.input as InferToolInput<typeof tools.complete_task>;
+
+  const report = completeTaskInput.report;
 
   console.log(`Lead agent collected ${allSources.length} total sources from all subagents`);
   

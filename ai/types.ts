@@ -1,5 +1,5 @@
 import { webSearchTool, webFetchTool, createPlanTool, completeTaskTool } from './tools';
-import { InferToolOutput, InferToolInput, InferUITools, UIMessage } from 'ai';
+import { InferToolOutput, InferToolInput, InferUITools, UIMessage} from 'ai';
 
 const tools = {
   web_search: webSearchTool,
@@ -16,21 +16,21 @@ export interface Source {
   content?: string;
 }
 
-export type WebSearchTool = {
+export type WebSearchToolResult= {
   toolName: 'web_search';
   toolCallId: string;
   input: InferToolInput<typeof webSearchTool>;
   output: InferToolOutput<typeof webSearchTool>;
 }
 
-export type WebFetchTool = {
+export type WebFetchToolResult = {
   toolName: 'web_fetch';
   toolCallId: string;
   input: InferToolInput<typeof webFetchTool>;
   output: InferToolOutput<typeof webFetchTool>;
 }
 
-export type SubAgentToolCall = WebSearchTool | WebFetchTool;
+export type SubAgentToolCall = WebSearchToolResult | WebFetchToolResult;
 
 export type MyUIMessage = UIMessage<
   never,
