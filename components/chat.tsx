@@ -8,8 +8,7 @@ import { Messages } from './messages';
 import { StickToBottom, useStickToBottomContext } from 'use-stick-to-bottom';
 import { MyUIMessage } from '@/ai/types';
 import { Button } from '@/components/ui/button';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faRotateRight, faStop } from '@fortawesome/free-solid-svg-icons';
+import { RotateCcw, Square } from 'lucide-react';
 
 export function Chat() {
   const [input, setInput] = useState('');
@@ -83,7 +82,7 @@ export function Chat() {
               size="lg"
               className="min-w-32"
             >
-              <FontAwesomeIcon icon={faStop} className="mr-2 size-4" />
+              <Square className="mr-2 size-4" />
               Stop
             </Button>
           ) : (
@@ -93,7 +92,7 @@ export function Chat() {
               size="lg"
               className="min-w-32"
             >
-              <FontAwesomeIcon icon={faRotateRight} className="mr-2 size-4" />
+              <RotateCcw className="mr-2 size-4" />
               Start Over
             </Button>
           )}

@@ -2,8 +2,7 @@
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane, faStop } from '@fortawesome/free-solid-svg-icons';
+import { Send, Square } from 'lucide-react';
 
 interface InputBoxProps {
   input: string;
@@ -48,10 +47,11 @@ export function InputBox({ input, handleSubmit, onChange, inputRef, status, onSt
         variant='ghost'
         aria-label={isProcessing ? "Stop generation" : "Send message"}
       >
-        <FontAwesomeIcon 
-          icon={isProcessing ? faStop : faPaperPlane} 
-          className="size-4" 
-        />
+        {isProcessing ? (
+          <Square className="size-4" />
+        ) : (
+          <Send className="size-4" />
+        )}
       </Button>
     </form>
   );
