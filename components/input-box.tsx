@@ -36,7 +36,7 @@ export function InputBox({ input, handleSubmit, onChange, inputRef, status, onSt
         ref={inputRef}
         value={input}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Message assistant"
+        placeholder="Enter research query"
         className="flex-1 h-full max-h-32 py-3 pr-10 text-base border-border bg-secondary/50 text-foreground focus:outline-none focus-visible:ring-0 focus-visible:ring-transparent"
         disabled={isProcessing}
       />

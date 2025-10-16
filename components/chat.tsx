@@ -8,10 +8,12 @@ import { Messages } from './messages';
 import { StickToBottom, useStickToBottomContext } from 'use-stick-to-bottom';
 import { MyUIMessage } from '@/ai/types';
 import { Button } from '@/components/ui/button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRotateRight, faStop } from '@fortawesome/free-solid-svg-icons';
 
 export function Chat() {
   const [input, setInput] = useState('');
-  const { messages, sendMessage, status, stop } = useChat<MyUIMessage>({
+  const { messages, sendMessage, status, stop, setMessages } = useChat<MyUIMessage>({
     transport: new DefaultChatTransport({ api: '/api/chat' }),
   });
 
@@ -27,13 +29,20 @@ export function Chat() {
     setInput('');
   };
 
+  const handleReset = () => {
+    setMessages([]);
+    setInput('');
+  };
+
+  const isProcessing = status === 'submitted' || status === 'streaming';
+
   // When no messages, show centered layout
   if (messages.length === 0) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center w-full px-4">
         <div className="flex flex-col items-center gap-8 w-full max-w-4xl">
           <div className="text-foreground text-4xl text-center">
-            How may I help you?
+            What would you like to research?
           </div>
           <InputBox
             input={input}
@@ -64,17 +73,29 @@ export function Chat() {
         <ScrollToBottomButton />
       </StickToBottom>
       
-      {/* Input area - fixed height at bottom */}
-      <div className="flex-shrink-0 flex justify-center w-full pb-4 bg-background">
-        <div className="w-full max-w-3xl px-2">
-          <InputBox
-            input={input}
-            handleSubmit={handleSubmit}
-            onChange={setInput}
-            inputRef={inputRef}
-            status={status}
-            onStop={stop}
-          />
+      {/* Action buttons - fixed at bottom */}
+      <div className="flex-shrink-0 flex justify-center w-full pb-6 bg-background">
+        <div className="flex gap-3">
+          {isProcessing && (
+            <Button
+              onClick={stop}
+              variant="outline"
+              size="lg"
+              className="min-w-32"
+            >
+              <FontAwesomeIcon icon={faStop} className="mr-2 size-4" />
+              Stop
+            </Button>
+          )}
+          <Button
+            onClick={handleReset}
+            variant={isProcessing ? "ghost" : "default"}
+            size="lg"
+            className="min-w-32"
+          >
+            <FontAwesomeIcon icon={faRotateRight} className="mr-2 size-4" />
+            Start Over
+          </Button>
         </div>
       </div>
     </>
