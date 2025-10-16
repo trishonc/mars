@@ -5,8 +5,9 @@ import { InputBox } from './input-box';
 import { useEffect, useRef, useState } from "react";
 import { DefaultChatTransport } from 'ai';
 import { Messages } from './messages';
-import { ScrollArea } from '@/components/ui/scroll-area';
+import { StickToBottom, useStickToBottomContext } from 'use-stick-to-bottom';
 import { MyUIMessage } from '@/ai/types';
+import { Button } from '@/components/ui/button';
 
 export function Chat() {
   const [input, setInput] = useState('');
@@ -51,9 +52,17 @@ export function Chat() {
   return (
     <>
       {/* Messages area - will take flex-1 in parent */}
-      <ScrollArea className="flex-1 flex flex-col items-center w-full min-h-0 overflow-y-auto px-4">
-        <Messages messages={messages} status={status} />
-      </ScrollArea>
+      <StickToBottom 
+        className="flex-1 w-full min-h-0 relative"
+        resize="smooth"
+        initial="smooth"
+      >
+        <StickToBottom.Content className="flex flex-col items-center px-4">
+          <Messages messages={messages} status={status} />
+        </StickToBottom.Content>
+        
+        <ScrollToBottomButton />
+      </StickToBottom>
       
       {/* Input area - fixed height at bottom */}
       <div className="flex-shrink-0 flex justify-center w-full pb-4 bg-background">
@@ -69,5 +78,34 @@ export function Chat() {
         </div>
       </div>
     </>
+  );
+}
+
+function ScrollToBottomButton() {
+  const { isAtBottom, scrollToBottom } = useStickToBottomContext();
+
+  if (isAtBottom) return null;
+
+  return (
+    <Button
+      onClick={() => scrollToBottom()}
+      size="icon"
+      className="sticky bottom-18 left-1/2 -translate-x-1/2 z-10 rounded-full shadow-lg"
+      aria-label="Scroll to bottom"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="20"
+        height="20"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="m18 15-6 6-6-6" />
+      </svg>
+    </Button>
   );
 } 

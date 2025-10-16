@@ -1,6 +1,5 @@
 'use client';
 
-import { useScrollToBottom } from '@/hooks/use-scroll-to-bottom';
 import { Message } from './message';
 import { LoadingDots } from './loading-dots';
 import { MyUIMessage } from '@/ai/types';
@@ -11,10 +10,9 @@ interface MessagesProps {
 }
 
 export function Messages({ messages, status }: MessagesProps) {
-  const [containerRef, endRef] = useScrollToBottom();
 
   return (
-    <div ref={containerRef} className="flex flex-col flex-1 w-full items-center">
+    <div className="flex flex-col flex-1 w-full items-center">
       {messages.map((message) => (
         <Message key={message.id} message={message} status={status} />
       ))}
@@ -23,7 +21,7 @@ export function Messages({ messages, status }: MessagesProps) {
         <LoadingDots />
       )}
       {/* Invisible element at the bottom for scroll target */}
-      <div ref={endRef} />
+      <div />
     </div>
   );
 }
