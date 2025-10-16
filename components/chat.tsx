@@ -76,7 +76,7 @@ export function Chat() {
       {/* Action buttons - fixed at bottom */}
       <div className="flex-shrink-0 flex justify-center w-full pb-6 bg-background">
         <div className="flex gap-3">
-          {isProcessing && (
+          {isProcessing ? (
             <Button
               onClick={stop}
               variant="outline"
@@ -86,16 +86,17 @@ export function Chat() {
               <FontAwesomeIcon icon={faStop} className="mr-2 size-4" />
               Stop
             </Button>
+          ) : (
+            <Button
+              onClick={handleReset}
+              variant="default"
+              size="lg"
+              className="min-w-32"
+            >
+              <FontAwesomeIcon icon={faRotateRight} className="mr-2 size-4" />
+              Start Over
+            </Button>
           )}
-          <Button
-            onClick={handleReset}
-            variant={isProcessing ? "ghost" : "default"}
-            size="lg"
-            className="min-w-32"
-          >
-            <FontAwesomeIcon icon={faRotateRight} className="mr-2 size-4" />
-            Start Over
-          </Button>
         </div>
       </div>
     </>
