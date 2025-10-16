@@ -31,7 +31,6 @@ export function Message({ message, status }: MessageProps) {
               return (
                 <Text
                   key={key}
-                  id={key}
                   text={part.text}
                 />
               );
@@ -39,7 +38,6 @@ export function Message({ message, status }: MessageProps) {
               return (
                 <Reasoning
                   key={key}
-                  id={key}
                   text={part.text}
                   state={status === 'ready' ? 'done' : part.state}
                 />
@@ -58,7 +56,6 @@ export function Message({ message, status }: MessageProps) {
               return (
                 <FinalReport
                   key={key}
-                  id={key}
                   text={part.data.report}
                   sources={part.data.sources}
                   phase={part.data.phase}
@@ -68,7 +65,6 @@ export function Message({ message, status }: MessageProps) {
               return (
                 <CreatePlan 
                   key={key}
-                  id={key}
                   state={status === 'ready' ? 'input-available' : part.state}
                   plan={part.input?.plan}
                   errorText={part.errorText}

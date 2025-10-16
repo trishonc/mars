@@ -1,16 +1,15 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { MemoizedMarkdown } from '../markdown';
+import { Streamdown } from 'streamdown';
 import { Bot, Clock, FileText } from 'lucide-react';
 
 interface CreatePlanProps {
-  id: string;
   state: 'input-streaming' | 'input-available' | 'output-available' | 'output-error';
   plan?: string;   
   errorText?: string;
 }
 
-export function CreatePlan({ id, state, plan, errorText }: CreatePlanProps) {
+export function CreatePlan({ state, plan, errorText }: CreatePlanProps) {
   const getHeaderContent = () => {
     switch (state) {
       case 'input-streaming':
@@ -79,7 +78,7 @@ export function CreatePlan({ id, state, plan, errorText }: CreatePlanProps) {
                 <div className="px-4">
                   <div className="prose prose-sm max-w-none">
                     <div className="text-card-foreground">
-                      <MemoizedMarkdown id={id} content={plan} />
+                      <Streamdown>{plan}</Streamdown>
                     </div>
                   </div>
                 </div>

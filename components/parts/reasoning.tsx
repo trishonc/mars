@@ -4,15 +4,14 @@ import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { Brain, Clock } from 'lucide-react';
 import React, { useEffect, useRef } from 'react';
-import { MemoizedMarkdown } from '../markdown';
+import { Streamdown } from 'streamdown';
 
 interface ReasoningProps {
-  id: string;
   text: string;
   state?: 'streaming' | 'done';
 }
 
-export function Reasoning({ id, text, state }: ReasoningProps) {
+export function Reasoning({ text, state }: ReasoningProps) {
   const startTimeRef = useRef<number | null>(null);
   const [duration, setDuration] = React.useState<number | null>(null);
   // Track when thinking starts
@@ -66,7 +65,7 @@ export function Reasoning({ id, text, state }: ReasoningProps) {
                 <div className="px-4">
                   <div className="prose prose-sm max-w-none">
                     <div className="text-card-foreground">
-                      <MemoizedMarkdown id={id} content={text} />
+                      <Streamdown>{text}</Streamdown>
                     </div>
                   </div>
                 </div>

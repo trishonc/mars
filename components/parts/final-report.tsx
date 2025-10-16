@@ -1,17 +1,21 @@
+'use client';
+
 import { Card } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { MemoizedMarkdown } from '../markdown';
+import { Streamdown } from 'streamdown';
+import { CitationsCard } from '@/components/citations-card';
 import { Sparkles, FileText, FileCheck } from 'lucide-react';
 import { Source } from '@/ai/types';
+import { type ComponentType } from 'react';
+import rehypeRaw from 'rehype-raw';
 
 interface FinalReportProps {
-  id: string;
   text: string;    
   sources: Source[];
   phase: 'synthesizing' | 'citations' | 'finished';
 }
 
-export function FinalReport({ id, text, sources, phase }: FinalReportProps) {
+export function FinalReport({ text, sources, phase }: FinalReportProps) {
   const getHeaderContent = () => {
     switch (phase) {
       case 'synthesizing':
@@ -50,10 +54,34 @@ export function FinalReport({ id, text, sources, phase }: FinalReportProps) {
             {text && (
               <AccordionContent>
                 <div className="px-4">
-                  <div className="prose prose-sm max-w-none">
-                    <div className="text-card-foreground">
-                      <MemoizedMarkdown id={id} content={text} sources={sources} />
-                    </div>
+                  <div className="prose prose-sm max-w-none text-card-foreground">
+                    <Streamdown
+                      rehypePlugins={[rehypeRaw]}
+                      parseIncompleteMarkdown={true}
+                      components={
+                        {
+                          cite: ({ children, ...props }: any) => {
+                            if (!children) return null;
+
+                            const citationNumber = Number(String(children).trim());
+                            if (!Number.isInteger(citationNumber) || citationNumber < 1) return null;
+
+                            const source = sources?.[citationNumber - 1];
+                            if (!source) return null;
+                            return (
+                              <CitationsCard
+                                citationNumber={citationNumber}
+                                url={source.url}
+                                title={source.title || 'Untitled'}
+                                {...props}
+                              />
+                            );
+                          },
+                        } as Record<string, ComponentType<unknown>>
+                      }
+                    >
+                      {text}
+                    </Streamdown>
                   </div>
                 </div>
               </AccordionContent>
