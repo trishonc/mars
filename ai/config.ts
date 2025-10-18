@@ -1,4 +1,8 @@
-import { openai } from '@ai-sdk/openai';
+import { createOpenRouter } from '@openrouter/ai-sdk-provider';
+
+const openrouter = createOpenRouter({
+  apiKey: process.env.OPENROUTER_API_KEY,
+});
 
 export const SEARCH_CONFIG = {
   MAX_SEARCH_RESULTS: 5,
@@ -6,19 +10,19 @@ export const SEARCH_CONFIG = {
 
 export const MODEL_CONFIG = {
   LEAD_AGENT: {
-    model: openai("gpt-4.1-mini"),
+    model: openrouter('openai/gpt-4.1-mini'),
     providerOptions: {
       openai: {},
     },
   },
   SUB_AGENT: {
-    model: openai("gpt-4.1-mini"),
+    model: openrouter('openai/gpt-4.1-mini'),
     providerOptions: {
       openai: {},
     },
   },
   CITATIONS: {
-    model: openai('gpt-4.1-mini'),
+    model: openrouter('openai/gpt-4.1-mini'),
     providerOptions: {
       openai: {},
     },
