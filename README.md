@@ -14,7 +14,7 @@ An open-source implementation of a multi-agent research system inspired by [Clau
 - **Framework**: [Next.js 15](https://nextjs.org/) with App Router
 - **UI Components**: [ShadCN UI](https://ui.shadcn.com/) for modern UI Components powered by [Tailwind CSS](https://tailwindcss.com) with Claude theme from [TweakCN](https://https://tweakcn.com/)
 - **Runtime**: [Bun](https://bun.sh/) for fast JavaScript runtime
-- **AI Integration**: [Vercel AI SDK 5](https://sdk.vercel.ai/) for OpenAI LLM integration and streaming via custom data parts
+- **AI Integration**: [Vercel AI SDK 5](https://sdk.vercel.ai/) for OpenRouter LLMs integration and streaming via custom data parts
 - **Web Search**: [Exa AI](https://exa.ai/) for intelligent web search capabilities
 
 ## 🏗️ Architecture
@@ -31,7 +31,7 @@ This project implements the orchestrator-worker pattern described in Anthropic's
 ### Prerequisites
 
 - [Bun](https://bun.sh/) installed on your system
-- OpenAI API key
+- OpenRouter API key
 - Exa AI API key
 
 ### Installation
@@ -54,7 +54,7 @@ cp .env.example .env.local
 
 Add your API keys to `.env.local`:
 ```env
-OPENAI_API_KEY=your_openai_api_key
+OPENROUTER_API_KEY=your_openrouter_api_key
 EXA_API_KEY=your_exa_api_key
 ```
 
