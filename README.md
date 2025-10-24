@@ -86,4 +86,3 @@ This project serves as a great reference implementation for several advanced AI 
 
 - **Rough Implementation**: This is a rough proof-of-concept implementation and it is not intended for production use
 - **Tool Call Streaming Limitations**: Tool call input streaming does not work with all model providers so the plan creation may be generated in once instead of streamed for example
-- **OpenAI Reasoning**: To get reasoning streams with OpenAI models you must be ID card verified.
