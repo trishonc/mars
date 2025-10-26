@@ -9,6 +9,9 @@ const inter = Inter({ subsets: ['latin'] });
 export const metadata: Metadata = {
   title: "Mars",
   description: "Multi Agent Research System",
+  icons: {
+    icon: "/research.png",
+  },
 };
 
 export default function RootLayout({
